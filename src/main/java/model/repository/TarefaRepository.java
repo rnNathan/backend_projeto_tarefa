@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import model.entity.Tarefa;
+import seletor.TarefaSeletor;
 
 public class TarefaRepository implements BaseRepository<Tarefa> {
 
@@ -147,6 +148,111 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		}
 
 		return listaTarefas;
+	}
+
+	public ArrayList<Tarefa> consultarPorFiltro(TarefaSeletor seletor) {
+		ArrayList<Tarefa> listaTarefas = new ArrayList<Tarefa>();
+
+		String query = "select t.* from tarefa.tarefas t ";
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		Tarefa tarefa = null;
+		ResultSet resultado = null;
+		
+		query = incluirFiltros(seletor, query);
+		
+		if (seletor.temPaginacao()) {
+			query += " limit " + seletor.getLimite();
+			query += " offset " + seletor.getOffset();
+		}
+		
+		try {
+			resultado = stmt.executeQuery(query);
+			while (resultado.next()) {
+				tarefa = new Tarefa();
+				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
+				tarefa.setNomeTarefa(resultado.getString("nome"));
+				ItemTarefaRepository itemTarefa = new ItemTarefaRepository();
+				tarefa.setItensTarefa(itemTarefa.consultarPorId(resultado.getInt("iditem")));
+				listaTarefas.add(tarefa);
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Erro ao consultar todos as tarefas no banco.");
+			System.out.println("ERRO: " + e.getMessage());
+		}
+
+		return listaTarefas;
+	}
+
+	private String incluirFiltros(TarefaSeletor seletor, String query) {
+		boolean primeiro = true;
+
+		if (seletor.getNome() != null) {
+			if (primeiro) {
+				query += " where ";
+			} else {
+				query += " and ";
+			}
+		}
+
+		query += " upper(t.nome) like upper ('%" + seletor.getNome() + "%')";
+
+		if (seletor.getTipoTarefa() != null) {
+			if (primeiro) {
+				query += " where ";
+
+			} else {
+				query += " and ";
+			}
+			query += " upper(t.tipo_tarefa) like upper ('%" + seletor.getTipoTarefa() + "%')";
+		}
+
+		return query;
+
+	}
+	
+	public int contarTotalDeRegistro(TarefaSeletor seletor) {
+		ArrayList<Tarefa> listaTarefas = new ArrayList<Tarefa>();
+
+		String query = "select t.* from tarefa.tarefas t ";
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ResultSet resultado = null;
+		int totalRegistros = 0;
+		
+		query = incluirFiltros(seletor, query);
+		try {
+			resultado = stmt.executeQuery(query);
+			if (resultado.next()) {
+				totalRegistros += resultado.getInt(1);
+				}
+		} catch (Exception e) {
+			System.out.println("ERRO AO CONSULTAR TOTAL DE TAREFAS!");
+			System.out.println("ERRO: " + e.getMessage());
+		}finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		
+		
+		return totalRegistros;
+	}
+	
+	public int contarPaginas(TarefaSeletor seletor) {
+		int totalPaginas = 0;
+		int totalRegistros = this.contarTotalDeRegistro(seletor);
+
+		totalPaginas = totalRegistros / seletor.getLimite();
+		int resto = totalRegistros % seletor.getLimite();
+
+		if (resto > 0) {
+			totalPaginas++;
+		}
+
+		return totalPaginas;
+
 	}
 
 }

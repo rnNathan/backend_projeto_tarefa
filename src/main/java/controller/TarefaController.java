@@ -13,6 +13,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import model.entity.ItemTarefa;
 import model.entity.Tarefa;
+import seletor.TarefaSeletor;
 import service.TarefaService;
 
 @Path("/tarefa")
@@ -59,4 +60,27 @@ public class TarefaController {
 
 	}
 	
+	@Path("/filtro")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Tarefa> consultarPorFiltro(TarefaSeletor seletor){
+		return tarefaService.consultarPorFiltro(seletor);
+	}
+	
+	@Path("/contar-pagina")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public int contarPaginas(TarefaSeletor seletor) {
+		return this.tarefaService.contarPaginas(seletor);
+	}
+	
+	@Path("/contar")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public int contarTotalDeRegistro(TarefaSeletor seletor) {
+		return this.tarefaService.contarTotalRegistro(seletor);
+	}
 }

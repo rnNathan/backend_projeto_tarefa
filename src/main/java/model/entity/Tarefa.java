@@ -1,49 +1,55 @@
 package model.entity;
 
 public class Tarefa {
-	
+
 	private int idTarefa;
 	private String nomeTarefa;
 	private String tipoTarefa;
-	private ItemTarefa descricao;
-	
-	
+	private ItemTarefa itensTarefa;
+
 	public Tarefa() {
 		super();
 
 	}
-	public Tarefa(int idTarefa,String nomeString, String tipoTarefa, ItemTarefa descricao) {
+
+	public Tarefa(int idTarefa, String nomeTarefa, String tipoTarefa, ItemTarefa itensTarefa) {
 		super();
 		this.idTarefa = idTarefa;
-		this.nomeTarefa = nomeTarefa;	
+		this.nomeTarefa = nomeTarefa;
 		this.tipoTarefa = tipoTarefa;
-		this.descricao = descricao;
+		this.itensTarefa = itensTarefa;
 	}
+
 	public int getIdTarefa() {
 		return idTarefa;
 	}
+
 	public void setIdTarefa(int idTarefa) {
 		this.idTarefa = idTarefa;
 	}
+
+	public String getNomeTarefa() {
+		return nomeTarefa;
+	}
+
+	public void setNomeTarefa(String nomeTarefa) {
+		this.nomeTarefa = nomeTarefa;
+	}
+
 	public String getTipoTarefa() {
 		return tipoTarefa;
 	}
+
 	public void setTipoTarefa(String tipoTarefa) {
 		this.tipoTarefa = tipoTarefa;
 	}
-	public ItemTarefa getDescricao() {
-		return descricao;
+
+	public ItemTarefa getItensTarefa() {
+		return itensTarefa;
 	}
-	public void setDescricao(ItemTarefa descricao) {
-		this.descricao = descricao;
+
+	public void setItensTarefa(ItemTarefa descricao) {
+		this.itensTarefa = descricao;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

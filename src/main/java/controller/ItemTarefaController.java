@@ -16,46 +16,46 @@ import service.ItemTarefaService;
 
 @Path("/item")
 public class ItemTarefaController {
-	
+
 	private ItemTarefaService service = new ItemTarefaService();
-	
+
 	@POST
 	@Path("/inserir")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ItemTarefa inserir(ItemTarefa novaPessoa){
+	public ItemTarefa inserir(ItemTarefa novaPessoa) {
 		return this.service.inserir(novaPessoa);
 	}
-	
+
 	@PUT
 	@Path("/alterar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public boolean alterar (ItemTarefa novaVacina) {
+	public boolean alterar(ItemTarefa novaVacina) {
 		return service.alterar(novaVacina);
 	}
-	
+
 	@DELETE
 	@Path("/excluir/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public boolean excluir (@PathParam("id")int id) {
+	public boolean excluir(@PathParam("id") int id) {
 		return this.service.excluir(id);
 	}
-	
+
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ItemTarefa consultarPorId(@PathParam("id") int id) {
 		return service.consultarPorId(id);
 	}
-	
-	@GET 
+
+	@GET
 	@Path("/listar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<ItemTarefa> listarTodos() {
 		return this.service.consultarTodos();
-		
+
 	}
 
 }

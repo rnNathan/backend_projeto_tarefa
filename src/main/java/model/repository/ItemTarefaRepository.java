@@ -13,6 +13,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 
 	@Override
 	public ItemTarefa inserir(ItemTarefa novoItem) {
+		
 		String query = "INSERT INTO tarefa.item (descricao) VALUES (?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -32,7 +33,6 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 		} finally {
 			Banco.closePreparedStatement(pstmt);
 			Banco.closeConnection(conn);
-
 		}
 
 		return novoItem;

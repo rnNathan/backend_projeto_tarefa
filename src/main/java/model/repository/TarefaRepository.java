@@ -89,6 +89,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 
 		return alterou;
 	}
+	
 
 	@Override
 	public Tarefa consultarPorId(int id) {
@@ -138,7 +139,8 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
 				tarefa.setNomeTarefa(resultado.getString("nome"));
 				ItemTarefaRepository itemTarefa = new ItemTarefaRepository();
-				tarefa.setItensTarefa(itemTarefa.consultarPorId(resultado.getInt("iditem")));
+				ItemTarefaRepository repository = new ItemTarefaRepository();
+				tarefa.setItensTarefa(repository.consultarPorId(resultado.getInt("iditem")));
 				listaTarefas.add(tarefa);
 			}
 
@@ -254,5 +256,6 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		return totalPaginas;
 
 	}
+
 
 }

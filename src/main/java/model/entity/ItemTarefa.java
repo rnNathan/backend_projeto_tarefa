@@ -4,11 +4,13 @@ public class ItemTarefa {
 
 	private int idItem;
 	private String descricao;
+	private boolean realizado;
 
-	public ItemTarefa(int idItem, String descricao) {
+	public ItemTarefa(int idItem, String descricao, boolean realizado) {
 		super();
 		this.idItem = idItem;
 		this.descricao = descricao;
+		this.realizado = realizado;
 	}
 
 	public ItemTarefa() {
@@ -31,5 +33,15 @@ public class ItemTarefa {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
+	public boolean isRealizado() {
+		return realizado;
+	}
+
+	public void setRealizado(boolean realizado) {
+		this.realizado = realizado;
+	}
+	
+	
 
 }

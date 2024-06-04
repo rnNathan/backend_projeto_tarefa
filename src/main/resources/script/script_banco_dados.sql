@@ -14,6 +14,7 @@ create table if not exists tarefa.tarefas (
 create table if not exists tarefa.item (
 	id_item integer auto_increment primary key,
 	descricao varchar (255) not null,
-	realizado boolean bit bykk default comment 'true- realizada; false - não realizada'
+	realizado boolean bit default comment 'true- realizada; false - não realizada'
 	
 )
+

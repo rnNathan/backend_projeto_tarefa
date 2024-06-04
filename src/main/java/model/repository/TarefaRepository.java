@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import model.entity.ItemTarefa;
 import model.entity.Tarefa;
@@ -197,7 +198,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 	private String incluirFiltros(TarefaSeletor seletor, String query) {
 		boolean primeiro = true;
 
-		if (seletor.getNome() != null) {
+		if (seletor.getNomeTarefa() != null) {
 			if (primeiro) {
 				query += " where ";
 			} else {
@@ -205,7 +206,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			}
 		}
 
-		query += " upper(t.nome) like upper ('%" + seletor.getNome() + "%')";
+		query += " upper(t.nome) like upper ('%" + seletor.getNomeTarefa() + "%')";
 
 		if (seletor.getTipoTarefa() != null) {
 			if (primeiro) {
@@ -217,12 +218,22 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			query += " upper(t.tipo_tarefa) like upper ('%" + seletor.getTipoTarefa() + "%')";
 		}
 
+		if (seletor.isRealizado()) {
+			if (primeiro) {
+				query += " where ";
+			} else {
+				query += " and ";
+			}
+			query += " t.realizado = " + seletor.isRealizado();
+		} else {
+			query += " t.realizado = " + seletor.isRealizado();
+
+		}
 		return query;
 
 	}
 
 	public int contarTotalDeRegistro(TarefaSeletor seletor) {
-		ArrayList<Tarefa> listaTarefas = new ArrayList<Tarefa>();
 
 		String query = "select t.* from tarefa.tarefas t ";
 		Connection conn = Banco.getConnection();
@@ -263,13 +274,43 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 
 	}
 
+	public List<Tarefa> listarTemplates() {
+		String query = "SELECT * FROM tarefa.tarefas WHERE is_template = TRUE";
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ResultSet resultado = null;
+		List<Tarefa> templates = new ArrayList<>();
+
+		try {
+			resultado = stmt.executeQuery(query);
+			while (resultado.next()) {
+				Tarefa tarefa = new Tarefa();
+				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
+				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
+				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
+				tarefa.setRealizado(resultado.getBoolean("realizada"));
+				tarefa.setTemplate(resultado.getBoolean("is_template"));
+				templates.add(tarefa);
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao listar templates de tarefa.");
+			System.out.println("ERRO: " + e.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return templates;
+	}
+
 	// Método para criar uma nova tarefa a partir de um template
-	public void criarTarefaAPartirDeTemplate(int idTarefaTemplate) {
+	public Tarefa criarTarefaAPartirDeTemplate(int idTarefaTemplate) {
 
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ResultSet resultadoTarefaTemplate = null;
 		ResultSet resultadoItensTemplate = null;
+		Tarefa tarefa = null;
 
 		// CONSULTAR TAREFA TEMPLATE
 		String queryTarefaTemplate = "SELECT * FROM tarefa.tarefas WHERE id_tarefa = " + idTarefaTemplate
@@ -277,9 +318,8 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 
 		try {
 			resultadoTarefaTemplate = stmt.executeQuery(queryTarefaTemplate);
-
 			if (resultadoTarefaTemplate.next()) {
-				Tarefa tarefa = new Tarefa();
+				tarefa = new Tarefa();
 
 				// String nomeTarefa = resultadoTarefaTemplate.getString("nome_tarefa");
 				// String tipoTarefa = resultadoTarefaTemplate.getString("tipo_tarefa");
@@ -289,7 +329,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 				// PreparedStatement psInsertTarefa = conn.prepareStatement(insertTarefa,
 				// Statement.RETURN_GENERATED_KEYS);
 
-				String insertTarefa = "INSERT INTO tarefas (nome_tarefa, tipo_tarefa) VALUES (?, ?)";
+				String insertTarefa = "INSERT INTO tarefa.tarefas (nome_tarefa, tipo_tarefa) VALUES (?, ?)";
 				PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, insertTarefa);
 				pstmt.setString(1, tarefa.getNomeTarefa());
 				pstmt.setString(2, tarefa.getTipoTarefa());
@@ -311,7 +351,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 					// String descricao = resultadoItensTemplate.getString("descricao");
 					// boolean realizadoItem = resultadoItensTemplate.getBoolean("realizado");
 
-					String insertItem = "INSERT INTO itens_tarefa (id_tarefa, descricao) VALUES (?, ?)";
+					String insertItem = "INSERT INT tarefa.item (id_tarefa, descricao) VALUES (?, ?)";
 					PreparedStatement pstmt2 = Banco.getPreparedStatementWithPk(conn, insertItem);
 					pstmt2.setInt(1, item.getIdItem());
 					pstmt2.setString(2, item.getDescricao());
@@ -328,5 +368,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			Banco.closeStatement(stmt);
 			Banco.closeConnection(conn);
 		}
+		
+		return tarefa;
 	}
 }

@@ -9,6 +9,7 @@ public class Tarefa {
 	private String tipoTarefa;
 	private ArrayList<ItemTarefa> itensTarefa;
 	private boolean realizado;
+	private boolean isTemplate;
 
 	public Tarefa() {
 		super();
@@ -16,13 +17,14 @@ public class Tarefa {
 	}
 
 	public Tarefa(int idTarefa, String nomeTarefa, String tipoTarefa, ArrayList<ItemTarefa> itensTarefa,
-			boolean realizado) {
+			boolean realizado, boolean isTemplate) {
 		super();
 		this.idTarefa = idTarefa;
 		this.nomeTarefa = nomeTarefa;
 		this.tipoTarefa = tipoTarefa;
 		this.itensTarefa = itensTarefa;
 		this.realizado = realizado;
+		this.isTemplate = isTemplate;
 	}
 
 	public int getIdTarefa() {
@@ -64,5 +66,14 @@ public class Tarefa {
 	public void setRealizado(boolean realizado) {
 		this.realizado = realizado;
 	}
+
+	public boolean isTemplate() {
+		return isTemplate;
+	}
+
+	public void setTemplate(boolean isTemplate) {
+		this.isTemplate = isTemplate;
+	}
+	
 
 }

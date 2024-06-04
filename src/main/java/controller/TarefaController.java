@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -82,5 +83,19 @@ public class TarefaController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public int contarTotalDeRegistro(TarefaSeletor seletor) {
 		return this.tarefaService.contarTotalRegistro(seletor);
+	}
+	
+	@Path("/contar-template")
+	@GET
+	public List<Tarefa> listaTemplate (){
+		return tarefaService.listaTemplate();
+	}
+	
+	@POST
+	@Path("/inserir-template")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Tarefa criarTarefaAPartirDeTemplate(int id) {
+		return this.tarefaService.criarTarefaAPartirDeTemplate(id);
 	}
 }

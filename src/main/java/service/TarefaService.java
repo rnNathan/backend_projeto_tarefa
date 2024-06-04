@@ -1,6 +1,7 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import model.entity.Tarefa;
 import model.repository.TarefaRepository;
@@ -43,5 +44,15 @@ public class TarefaService {
 	public int contarPaginas(TarefaSeletor seletor) {
 		return this.tarefaRepository.contarPaginas(seletor);
 	}
+	
+	public List<Tarefa> listaTemplate() {
+		return tarefaRepository.listarTemplates();
+	}
+	
+	public Tarefa criarTarefaAPartirDeTemplate(int id) {
+		return tarefaRepository.criarTarefaAPartirDeTemplate(id);
+	}
+	
+	
 
 }

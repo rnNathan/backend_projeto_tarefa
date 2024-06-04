@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class Usuario {
 
+	private int idUsuario;
 	private String nome;
 	private String cpf;
 	private LocalDate dataNascimento;
@@ -17,9 +18,10 @@ public class Usuario {
 		super();
 	}
 
-	public Usuario(String nome, String cpf, LocalDate dataNascimento, String email, String login, String senha,
-			ArrayList<Tarefa> listaTarefas) {
+	public Usuario(int idUsuario, String nome, String cpf, LocalDate dataNascimento, String email, String login,
+			String senha, ArrayList<Tarefa> listaTarefas) {
 		super();
+		this.idUsuario = idUsuario;
 		this.nome = nome;
 		this.cpf = cpf;
 		this.dataNascimento = dataNascimento;
@@ -27,6 +29,14 @@ public class Usuario {
 		this.login = login;
 		this.senha = senha;
 		this.listaTarefas = listaTarefas;
+	}
+
+	public int getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
 	public String getNome() {

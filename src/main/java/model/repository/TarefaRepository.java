@@ -312,7 +312,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		ResultSet resultadoItensTemplate = null;
 		Tarefa tarefa = null;
 
-		// CONSULTAR TAREFA TEMPLATE
+		// Fazer uma consultar na tabela Tarefa pelo ID e verificando se a tabela é template ou não.
 		String queryTarefaTemplate = "SELECT * FROM tarefa.tarefas WHERE id_tarefa = " + idTarefaTemplate
 				+ " AND is_template = TRUE";
 
@@ -333,18 +333,18 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 				PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, insertTarefa);
 				pstmt.setString(1, tarefa.getNomeTarefa());
 				pstmt.setString(2, tarefa.getTipoTarefa());
-				pstmt.executeUpdate();
+				pstmt.execute();
 
 				ResultSet resultado = pstmt.getGeneratedKeys();
 				if (resultado.next()) {
 					tarefa.setIdTarefa(resultado.getInt(1));
 				}
 
-				// Consulta os itens template
+				//Fazer uma consultar de todos os itens associado a tabela tarefa template.
 				String queryItensTemplate = "SELECT * FROM tarefa.item WHERE id_tarefa = " + idTarefaTemplate;
 				resultadoItensTemplate = stmt.executeQuery(queryItensTemplate);
 
-				// Insere os itens da nova tarefa
+				//Inserindo os itens da nova tabela tarefa.
 				while (resultadoItensTemplate.next()) {
 					ItemTarefa item = new ItemTarefa();
 
@@ -355,7 +355,12 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 					PreparedStatement pstmt2 = Banco.getPreparedStatementWithPk(conn, insertItem);
 					pstmt2.setInt(1, item.getIdItem());
 					pstmt2.setString(2, item.getDescricao());
-					pstmt2.executeUpdate();
+					pstmt2.execute();
+					ResultSet result = pstmt.getGeneratedKeys();
+					if (resultado.next()) {
+						item.setIdItem(result.getInt(1));
+					}
+					
 				}
 			}
 

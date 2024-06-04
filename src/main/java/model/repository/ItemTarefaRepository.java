@@ -13,7 +13,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 
 	@Override
 	public ItemTarefa inserir(ItemTarefa novoItem) {
-		
+
 		String query = "INSERT INTO tarefa.item (descricao) VALUES (?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
@@ -100,6 +100,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 				itemTarefa = new ItemTarefa();
 				itemTarefa.setIdItem(resultado.getInt("iditem"));
 				itemTarefa.setDescricao(resultado.getString("descricao"));
+				itemTarefa.setRealizado(resultado.getBoolean("realizado"));
 
 			}
 
@@ -118,7 +119,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 	public ArrayList<ItemTarefa> consultarTodos() {
 		ArrayList<ItemTarefa> listaItemTarefa = new ArrayList<ItemTarefa>();
 
-		String query = "SELECT descricao, iditem FROM tarefa.item";
+		String query = "SELECT descricao, iditem, realizado FROM tarefa.item";
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ItemTarefa itemTarefa = null;
@@ -130,14 +131,51 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 				itemTarefa = new ItemTarefa();
 				itemTarefa.setIdItem(resultado.getInt("iditem"));
 				itemTarefa.setDescricao(resultado.getString("descricao"));
+				itemTarefa.setRealizado(resultado.getBoolean("realizado"));
 				listaItemTarefa.add(itemTarefa);
 			}
 
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar todos os itens no banco.");
 			System.out.println("ERRO: " + e.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
 		}
+		return listaItemTarefa;
+	}
+
+	public ArrayList<ItemTarefa> consultarTodosOsItensAssociadoUmaTarefa(int id) {
+		ArrayList<ItemTarefa> listaItemTarefa = new ArrayList<ItemTarefa>();
+		String query = "SELECT * FROM  tarefa.item where id_tarefa =" + id;
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ItemTarefa itemTarefa = null;
+		ResultSet resultado = null;
+
+		try {
+			resultado = stmt.executeQuery(query);
+			while (resultado.next()) {
+				itemTarefa = new ItemTarefa();
+				itemTarefa.setIdItem(resultado.getInt("iditem"));
+				itemTarefa.setDescricao(resultado.getString("descricao"));
+				itemTarefa.setRealizado(resultado.getBoolean("realizado"));
+				listaItemTarefa.add(itemTarefa);
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Erro ao consultar todos os itens associado a uma tarefa.");
+			System.out.println("ERRO: " + e.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+
+		}
+
 		return null;
+
 	}
 
 }

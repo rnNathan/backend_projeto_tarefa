@@ -7,22 +7,22 @@ public class Tarefa {
 	private int idTarefa;
 	private String nomeTarefa;
 	private String tipoTarefa;
-	private ItemTarefa itensTarefa;
-	private boolean realizada;
+	private ArrayList<ItemTarefa> itensTarefa;
+	private boolean realizado;
 
 	public Tarefa() {
 		super();
 
 	}
 
-	public Tarefa(int idTarefa, String nomeTarefa, String tipoTarefa, ItemTarefa itensTarefa,
-			boolean realizada) {
+	public Tarefa(int idTarefa, String nomeTarefa, String tipoTarefa, ArrayList<ItemTarefa> itensTarefa,
+			boolean realizado) {
 		super();
 		this.idTarefa = idTarefa;
 		this.nomeTarefa = nomeTarefa;
 		this.tipoTarefa = tipoTarefa;
 		this.itensTarefa = itensTarefa;
-		this.realizada = realizada;
+		this.realizado = realizado;
 	}
 
 	public int getIdTarefa() {
@@ -49,22 +49,20 @@ public class Tarefa {
 		this.tipoTarefa = tipoTarefa;
 	}
 
-	
-
-	public ItemTarefa getItensTarefa() {
+	public ArrayList<ItemTarefa> getItensTarefa() {
 		return itensTarefa;
 	}
 
-	public void setItensTarefa(ItemTarefa itensTarefa) {
+	public void setItensTarefa(ArrayList<ItemTarefa> itensTarefa) {
 		this.itensTarefa = itensTarefa;
 	}
 
-	public boolean isRealizada() {
-		return realizada;
+	public boolean isRealizado() {
+		return realizado;
 	}
 
-	public void setRealizada(boolean realizada) {
-		this.realizada = realizada;
+	public void setRealizado(boolean realizado) {
+		this.realizado = realizado;
 	}
 
 }

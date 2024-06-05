@@ -376,4 +376,6 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		
 		return tarefa;
 	}
+	
+	
 }

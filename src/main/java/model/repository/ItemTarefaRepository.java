@@ -174,8 +174,67 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 
 		}
 
-		return null;
+		return listaItemTarefa;
 
 	}
+	
+	public ArrayList<ItemTarefa> consultarItensPedentes(int id) {
+		ArrayList<ItemTarefa> listaItemTarefa = new ArrayList<ItemTarefa>();
+		String query = "SELECT * FROM tarefa.item where id_tarefa = " + id + " AND realizado = false";
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ItemTarefa itemTarefa = null;
+		ResultSet resultado = null;
+
+		try {
+			resultado = stmt.executeQuery(query);
+			while (resultado.next()) {
+				itemTarefa = new ItemTarefa();
+				itemTarefa.setIdItem(resultado.getInt("iditem"));
+				itemTarefa.setDescricao(resultado.getString("descricao"));
+				itemTarefa.setRealizado(resultado.getBoolean("realizado"));
+				listaItemTarefa.add(itemTarefa);
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Erro ao consultar itens pendentes.");
+			System.out.println("ERRO: " + e.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+
+		}
+
+		return listaItemTarefa;
+
+	}
+	
+	public boolean marcaItemComoRealizado(int idItem) {
+		String query = "UPDATE tarefa.item set realizado = true where id_item = " + idItem;
+		Connection conn = Banco.getConnection();
+		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
+		boolean retorno = false;
+		ItemTarefa item = new ItemTarefa();
+		
+		try {
+			pstmt.setString(1, item.getDescricao());
+			pstmt.setInt(2, item.getIdItem());
+			retorno = pstmt.executeUpdate() > 0;
+			
+		} catch (Exception e) {
+			System.out.println("ERRO AO MARCA ITEM REALIZADO.");
+			System.out.println("ERRO: " + e.getMessage());
+		}finally {
+			Banco.closeStatement(pstmt);
+			Banco.closeConnection(conn);
+			
+		}
+		
+		return retorno;
+		
+	}
+	
+	
 
 }

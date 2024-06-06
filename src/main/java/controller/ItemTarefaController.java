@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 
+import exception.TarefaException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -23,22 +24,22 @@ public class ItemTarefaController {
 	@Path("/inserir")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ItemTarefa inserir(ItemTarefa novaPessoa) {
-		return this.service.inserir(novaPessoa);
+	public ItemTarefa inserir(ItemTarefa novoItem) {
+		return this.service.inserir(novoItem);
 	}
 
 	@PUT
 	@Path("/alterar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public boolean alterar(ItemTarefa novaVacina) {
-		return service.alterar(novaVacina);
+	public boolean alterar(ItemTarefa itemSelecionado) {
+		return service.alterar(itemSelecionado);
 	}
 
 	@DELETE
 	@Path("/excluir/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public boolean excluir(@PathParam("id") int id) {
+	public boolean excluir(@PathParam("id") int id) throws TarefaException {
 		return this.service.excluir(id);
 	}
 
@@ -55,7 +56,7 @@ public class ItemTarefaController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<ItemTarefa> listarTodos() {
 		return this.service.consultarTodos();
-
 	}
+	
 
 }

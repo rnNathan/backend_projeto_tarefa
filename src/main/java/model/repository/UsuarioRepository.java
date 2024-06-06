@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 import model.entity.Usuario;
 
-public class UsuarioRepository implements BaseRepository<Usuario>{
-	
+public class UsuarioRepository implements BaseRepository<Usuario> {
+
 	@Override
 	public Usuario inserir(Usuario novoUsuario) {
 
@@ -35,7 +35,7 @@ public class UsuarioRepository implements BaseRepository<Usuario>{
 			}
 
 		} catch (SQLException e) {
-			System.out.println("Erro: cadastrarUsuarioDAO");
+			System.out.println("Erro ao cadastrar usuario");
 			System.out.println("Erro: " + e.getMessage());
 
 		} finally {
@@ -52,7 +52,7 @@ public class UsuarioRepository implements BaseRepository<Usuario>{
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		boolean excluiu = false;
-		String query = "DELETE FROM tarefa.usuario WHERE idUsuario = " + id;
+		String query = "DELETE FROM tarefa.usuario WHERE id_usuario = " + id;
 		try {
 			if (stmt.executeUpdate(query) == 1) {
 				excluiu = true;
@@ -70,8 +70,8 @@ public class UsuarioRepository implements BaseRepository<Usuario>{
 	@Override
 	public boolean alterar(Usuario usuarioEditado) {
 		boolean alterou = false;
-		String query = " UPDATE tarefa.usuario " + " SET nome=?, cpf=?, email=?, data_nascimento=?, " + " login=?, senha=? "
-				+ " WHERE id=? ";
+		String query = " UPDATE tarefa.usuario " + " SET nome=?, cpf=?, email=?, data_nascimento=?, "
+				+ " login=?, senha=? " + " WHERE id_usuario=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 		try {
@@ -91,7 +91,7 @@ public class UsuarioRepository implements BaseRepository<Usuario>{
 			Banco.closeStatement(stmt);
 			Banco.closeConnection(conn);
 		}
-		return false;
+		return alterou;
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class UsuarioRepository implements BaseRepository<Usuario>{
 
 		Usuario usuario = null;
 		ResultSet resultado = null;
-		String query = " SELECT * FROM tarefa.usuario WHERE id = " + id;
+		String query = " SELECT * FROM tarefa.usuario WHERE id_usuario = " + id;
 
 		try {
 			resultado = stmt.executeQuery(query);
@@ -127,7 +127,7 @@ public class UsuarioRepository implements BaseRepository<Usuario>{
 
 	@Override
 	public ArrayList<Usuario> consultarTodos() {
-		
+
 		ArrayList<Usuario> usuarios = new ArrayList<>();
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
@@ -146,7 +146,7 @@ public class UsuarioRepository implements BaseRepository<Usuario>{
 				usuario.setDataNascimento(resultado.getDate("DATA_NASCIMENTO").toLocalDate());
 				usuario.setLogin(resultado.getString("LOGIN"));
 				usuario.setSenha(resultado.getString("SENHA"));
-				
+
 				usuarios.add(usuario);
 			}
 		} catch (SQLException erro) {
@@ -159,13 +159,13 @@ public class UsuarioRepository implements BaseRepository<Usuario>{
 		}
 		return usuarios;
 	}
-	
+
 	public boolean cpfJaCadastrado(String cpf) {
 		boolean cpfJaUtilizado = false;
 
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
-		String query = " SELECT count(id) FROM pessoa WHERE cpf = " + cpf;
+		String query = " SELECT count(id_usuario) FROM tarefa.usuario WHERE cpf = " + cpf;
 
 		try {
 			ResultSet resultado = stmt.executeQuery(query);
@@ -181,7 +181,4 @@ public class UsuarioRepository implements BaseRepository<Usuario>{
 
 		return cpfJaUtilizado;
 	}
-	
-	
-
 }

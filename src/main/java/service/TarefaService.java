@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import exception.TarefaException;
 import model.entity.ItemTarefa;
 import model.entity.Tarefa;
 import model.repository.ItemTarefaRepository;
@@ -13,7 +14,7 @@ import seletor.TarefaSeletor;
 public class TarefaService {
 
 	private TarefaRepository tarefaRepository = new TarefaRepository();
-	private ItemTarefaRepository  item = new ItemTarefaRepository();
+	private ItemTarefaRepository itemRepository = new ItemTarefaRepository();
 
 	public Tarefa inserir(Tarefa novoTarefa) {
 		return tarefaRepository.inserir(novoTarefa);
@@ -27,52 +28,51 @@ public class TarefaService {
 		return tarefaRepository.consultarTodos();
 	}
 
-	public Boolean alterar(Tarefa alterarTarefa) {
+	public boolean alterar(Tarefa alterarTarefa) {
 		return tarefaRepository.alterar(alterarTarefa);
 	}
 
-	public boolean excluir(int id) {
-		// Aplicar regra de negócio de que caso uma tarefa não tenha sido executada,
-		// não pode ser excluida!
-		return this.tarefaRepository.excluir(id);
+	public boolean excluir(int id) throws TarefaException {
+		if (tarefaRepository.consultarPorId(id) != null && tarefaRepository.consultarPorId(id).isRealizado()) {
+			return tarefaRepository.excluir(id);
+		} else {
+			throw new TarefaException("Tarefa não foi realizada, portanto não pode ser excluídos!");
+		}
 	}
-	
+
 	public ArrayList<Tarefa> consultarPorFiltro(TarefaSeletor seletor) {
 		return tarefaRepository.consultarPorFiltro(seletor);
 	}
-	
+
 	public int contarTotalRegistro(TarefaSeletor seletor) {
 		return this.tarefaRepository.contarTotalDeRegistro(seletor);
 	}
-	
+
 	public int contarPaginas(TarefaSeletor seletor) {
 		return this.tarefaRepository.contarPaginas(seletor);
 	}
-	
+
 	public List<Tarefa> listaTemplate() {
 		return tarefaRepository.listarTemplates();
 	}
-	
+
 	public Tarefa criarTarefaAPartirDeTemplate(int id) {
 		return tarefaRepository.criarTarefaAPartirDeTemplate(id);
 	}
-	
-	public Tarefa concluirTarefa(int idTarefa) {
-		
-		ArrayList<ItemTarefa> list = item.consultarItensPedentes(idTarefa);
+
+	public Tarefa concluirTarefa() {
+
 		Tarefa tarefa = new Tarefa();
+		ArrayList<ItemTarefa> list = itemRepository.consultarItensPedentes(tarefa.getIdTarefa());
 		
 		for (ItemTarefa itemTarefa : list) {
-			item.marcaItemComoRealizado(itemTarefa.getIdItem());
+			itemRepository.marcarItemComoRealizado(itemTarefa.getIdItem());
 		}
-		
-		tarefa = tarefaRepository.consultarPorId(idTarefa);
-		
+
+		tarefa = tarefaRepository.consultarPorId(tarefa.getIdTarefa());
+
 		return tarefa;
-		
-		
+
 	}
-	
-	
 
 }

@@ -4,10 +4,10 @@ public class TarefaSeletor extends BaseSeletor {
 	
 	private String nomeTarefa;
 	private String tipoTarefa;
-	private boolean realizado;
+	private Boolean realizado;
 	
 	
-	public TarefaSeletor(String nome, String tipoTarefa, boolean realizado ) {
+	public TarefaSeletor(String nome, String tipoTarefa, Boolean realizado ) {
 		super();
 		this.nomeTarefa = nome;
 		this.tipoTarefa = tipoTarefa;
@@ -17,7 +17,6 @@ public class TarefaSeletor extends BaseSeletor {
 	
 	public TarefaSeletor() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public String getNomeTarefa() {
@@ -33,11 +32,11 @@ public class TarefaSeletor extends BaseSeletor {
 		this.tipoTarefa = tipoTarefa;
 	}
 
-	public boolean isRealizado() {
+	public Boolean isRealizado() {
 		return realizado;
 	}
 
-	public void setRealizado(boolean realizado) {
+	public void setRealizado(Boolean realizado) {
 		this.realizado = realizado;
 	}
 	

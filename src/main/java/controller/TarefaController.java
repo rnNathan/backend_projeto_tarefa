@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import exception.TarefaException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -41,7 +42,7 @@ public class TarefaController {
 	@DELETE
 	@Path("/excluir/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public boolean excluir(@PathParam("id") int id) {
+	public boolean excluir(@PathParam("id") int id) throws TarefaException {
 		return this.tarefaService.excluir(id);
 	}
 
@@ -58,17 +59,16 @@ public class TarefaController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Tarefa> consultarTodos() {
 		return this.tarefaService.consultarTodos();
-
 	}
-	
+
 	@Path("/filtro")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<Tarefa> consultarPorFiltro(TarefaSeletor seletor){
+	public ArrayList<Tarefa> consultarPorFiltro(TarefaSeletor seletor) {
 		return tarefaService.consultarPorFiltro(seletor);
 	}
-	
+
 	@Path("/contar-pagina")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -76,7 +76,7 @@ public class TarefaController {
 	public int contarPaginas(TarefaSeletor seletor) {
 		return this.tarefaService.contarPaginas(seletor);
 	}
-	
+
 	@Path("/contar")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -84,18 +84,26 @@ public class TarefaController {
 	public int contarTotalDeRegistro(TarefaSeletor seletor) {
 		return this.tarefaService.contarTotalRegistro(seletor);
 	}
-	
+
 	@Path("/contar-template")
 	@GET
-	public List<Tarefa> listaTemplate (){
+	public List<Tarefa> listaTemplate() {
 		return tarefaService.listaTemplate();
 	}
-	
+
 	@POST
 	@Path("/inserir-template")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Tarefa criarTarefaAPartirDeTemplate(int id) {
 		return this.tarefaService.criarTarefaAPartirDeTemplate(id);
+	}
+	
+	@PUT
+	@Path("/concluido")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public Tarefa concluirTarefa() {
+		return tarefaService.concluirTarefa();
 	}
 }

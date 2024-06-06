@@ -14,13 +14,13 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 	@Override
 	public ItemTarefa inserir(ItemTarefa novoItem) {
 
-		String query = "INSERT INTO tarefa.item (descricao) VALUES (?)";
+		String query = "INSERT INTO tarefa.item (id_tarefa, descricao) VALUES (?, ?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 
 		try {
-
-			pstmt.setString(1, novoItem.getDescricao());
+			pstmt.setInt(1, novoItem.getIdTarefa().getIdTarefa());
+			pstmt.setString(2, novoItem.getDescricao());
 			pstmt.execute();
 			ResultSet resultado = pstmt.getGeneratedKeys();
 			if (resultado.next()) {
@@ -41,7 +41,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 
 	@Override
 	public boolean excluir(int id) {
-		String query = "DELETE FROM tarefa.item where iditem =" + id;
+		String query = "DELETE FROM tarefa.item where id_item =" + id;
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		boolean retorno = false;
@@ -65,14 +65,16 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 
 	@Override
 	public boolean alterar(ItemTarefa alterar) {
-		String query = "UPDATE tarefa.item SET descricao=?, iditem=?  where iditem=?";
+		String query = "UPDATE tarefa.item SET descricao=?, realizado=?  where id_item=?";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 		boolean alterou = false;
 
 		try {
 			pstmt.setString(1, alterar.getDescricao());
-			pstmt.setInt(2, alterar.getIdItem());
+			pstmt.setBoolean(2, alterar.isRealizado());
+			
+			pstmt.setInt(3, alterar.getIdItem());
 			alterou = pstmt.executeUpdate() > 0;
 
 		} catch (Exception e) {
@@ -88,7 +90,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 
 	@Override
 	public ItemTarefa consultarPorId(int id) {
-		String query = "SELECT descricao, iditem FROM tarefa.item where iditem = " + id;
+		String query = "SELECT descricao, id_item FROM tarefa.item where id_item = " + id;
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ItemTarefa itemTarefa = null;
@@ -98,7 +100,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 			resultado = stmt.executeQuery(query);
 			if (resultado.next()) {
 				itemTarefa = new ItemTarefa();
-				itemTarefa.setIdItem(resultado.getInt("iditem"));
+				itemTarefa.setIdItem(resultado.getInt("id_item"));
 				itemTarefa.setDescricao(resultado.getString("descricao"));
 				itemTarefa.setRealizado(resultado.getBoolean("realizado"));
 
@@ -119,7 +121,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 	public ArrayList<ItemTarefa> consultarTodos() {
 		ArrayList<ItemTarefa> listaItemTarefa = new ArrayList<ItemTarefa>();
 
-		String query = "SELECT descricao, iditem, realizado FROM tarefa.item";
+		String query = "SELECT descricao, id_item, realizado FROM tarefa.item";
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ItemTarefa itemTarefa = null;
@@ -129,7 +131,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 			resultado = stmt.executeQuery(query);
 			while (resultado.next()) {
 				itemTarefa = new ItemTarefa();
-				itemTarefa.setIdItem(resultado.getInt("iditem"));
+				itemTarefa.setIdItem(resultado.getInt("id_item"));
 				itemTarefa.setDescricao(resultado.getString("descricao"));
 				itemTarefa.setRealizado(resultado.getBoolean("realizado"));
 				listaItemTarefa.add(itemTarefa);
@@ -158,7 +160,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 			resultado = stmt.executeQuery(query);
 			while (resultado.next()) {
 				itemTarefa = new ItemTarefa();
-				itemTarefa.setIdItem(resultado.getInt("iditem"));
+				itemTarefa.setIdItem(resultado.getInt("id_item"));
 				itemTarefa.setDescricao(resultado.getString("descricao"));
 				itemTarefa.setRealizado(resultado.getBoolean("realizado"));
 				listaItemTarefa.add(itemTarefa);
@@ -177,7 +179,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 		return listaItemTarefa;
 
 	}
-	
+
 	public ArrayList<ItemTarefa> consultarItensPedentes(int id) {
 		ArrayList<ItemTarefa> listaItemTarefa = new ArrayList<ItemTarefa>();
 		String query = "SELECT * FROM tarefa.item where id_tarefa = " + id + " AND realizado = false";
@@ -190,7 +192,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 			resultado = stmt.executeQuery(query);
 			while (resultado.next()) {
 				itemTarefa = new ItemTarefa();
-				itemTarefa.setIdItem(resultado.getInt("iditem"));
+				itemTarefa.setIdItem(resultado.getInt("id_item"));
 				itemTarefa.setDescricao(resultado.getString("descricao"));
 				itemTarefa.setRealizado(resultado.getBoolean("realizado"));
 				listaItemTarefa.add(itemTarefa);
@@ -209,32 +211,27 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 		return listaItemTarefa;
 
 	}
-	
-	public boolean marcaItemComoRealizado(int idItem) {
+
+	public boolean marcarItemComoRealizado(int idItem) {
 		String query = "UPDATE tarefa.item set realizado = true where id_item = " + idItem;
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 		boolean retorno = false;
-		ItemTarefa item = new ItemTarefa();
-		
+
 		try {
-			pstmt.setString(1, item.getDescricao());
-			pstmt.setInt(2, item.getIdItem());
 			retorno = pstmt.executeUpdate() > 0;
-			
+
 		} catch (Exception e) {
 			System.out.println("ERRO AO MARCA ITEM REALIZADO.");
 			System.out.println("ERRO: " + e.getMessage());
-		}finally {
+		} finally {
 			Banco.closeStatement(pstmt);
 			Banco.closeConnection(conn);
-			
+
 		}
-		
+
 		return retorno;
-		
+
 	}
-	
-	
 
 }

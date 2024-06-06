@@ -2,6 +2,7 @@ package service;
 
 import java.util.ArrayList;
 
+import exception.TarefaException;
 import model.entity.ItemTarefa;
 import model.repository.ItemTarefaRepository;
 
@@ -25,8 +26,12 @@ public class ItemTarefaService {
 		return itemRepository.alterar(alterarItem);
 	}
 
-	public boolean excluir(int id) {
-		return this.itemRepository.excluir(id);
+	public boolean excluir(int id) throws TarefaException {
+		if (itemRepository.consultarPorId(id) != null && itemRepository.consultarPorId(id).isRealizado()) {
+			return itemRepository.excluir(id);
+		} else {
+			throw new TarefaException("Itens da tarefa não foram realizados, portanto não podem ser excluídos!");
+		}
 	}
 
 }

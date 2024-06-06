@@ -16,19 +16,18 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 
 	@Override
 	public Tarefa inserir(Tarefa novaTarefa) {
-		String query = "INSERT INTO tarefa.tarefas (nome_tarefa, tipo_tarefa) VALUES (?, ?)";
+		String query = "INSERT INTO tarefa.tarefas (id_usuario, nome_tarefa, tipo_tarefa) VALUES (?, ?, ?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 
 		try {
-
-			pstmt.setString(1, novaTarefa.getNomeTarefa());
-			pstmt.setString(2, novaTarefa.getTipoTarefa());
+			pstmt.setInt(1, novaTarefa.getIdUsuario().getIdUsuario());
+			pstmt.setString(2, novaTarefa.getNomeTarefa());
+			pstmt.setString(3, novaTarefa.getTipoTarefa());
 			pstmt.execute();
 			ResultSet resultado = pstmt.getGeneratedKeys();
 			if (resultado.next()) {
 				novaTarefa.setIdTarefa(resultado.getInt(1));
-				;
 			}
 
 		} catch (SQLException e) {
@@ -68,7 +67,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 
 	@Override
 	public boolean alterar(Tarefa tarefaSelecionada) {
-		String query = "UPDATE tarefa.tarefas SET nome_tarefa=?, tipo_tarefa=?, realizado=? where id_tarefa =?";
+		String query = "UPDATE tarefa.tarefas " + " SET nome_tarefa=?, tipo_tarefa=?, realizada=?, isTemplate=? where id_tarefa=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 		boolean alterou = false;
@@ -76,8 +75,10 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		try {
 			pstmt.setString(1, tarefaSelecionada.getNomeTarefa());
 			pstmt.setString(2, tarefaSelecionada.getTipoTarefa());
-			pstmt.setObject(3, tarefaSelecionada.getItensTarefa());
-			pstmt.setBoolean(4, tarefaSelecionada.isRealizado());
+			pstmt.setBoolean(3, tarefaSelecionada.isRealizado());
+			pstmt.setBoolean(4, tarefaSelecionada.isTemplate());
+			
+			pstmt.setInt(5, tarefaSelecionada.getIdTarefa());
 			alterou = pstmt.executeUpdate() > 0;
 
 		} catch (Exception e) {
@@ -105,9 +106,13 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			if (resultado.next()) {
 				tarefa = new Tarefa();
 				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
+
+				UsuarioRepository usuarioReposotory = new UsuarioRepository();
+				tarefa.setIdUsuario(usuarioReposotory.consultarPorId(resultado.getInt("id_usuario")));
+
 				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
 				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
-				tarefa.setRealizado(resultado.getBoolean("realizado"));
+				tarefa.setRealizado(resultado.getBoolean("realizada"));
 				ItemTarefaRepository itemTarefa = new ItemTarefaRepository();
 				tarefa.setItensTarefa(
 						itemTarefa.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));
@@ -141,8 +146,8 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 				tarefa = new Tarefa();
 				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
 				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
-				tarefa.setRealizado(resultado.getBoolean("realizado"));
-				ItemTarefaRepository itemTarefa = new ItemTarefaRepository();
+				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
+				tarefa.setRealizado(resultado.getBoolean("realizada"));
 				ItemTarefaRepository repository = new ItemTarefaRepository();
 				tarefa.setItensTarefa(
 						repository.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));
@@ -180,7 +185,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
 				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
 				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
-				tarefa.setRealizado(resultado.getBoolean("realizado"));
+				tarefa.setRealizado(resultado.getBoolean("realizada"));
 				ItemTarefaRepository itemTarefa = new ItemTarefaRepository();
 				tarefa.setItensTarefa(
 						itemTarefa.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));
@@ -188,7 +193,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			}
 
 		} catch (SQLException e) {
-			System.out.println("Erro ao consultar todos as tarefas no banco.");
+			System.out.println("Erro ao consultar tarefas com seletor no banco.");
 			System.out.println("ERRO: " + e.getMessage());
 		}
 
@@ -204,30 +209,30 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			} else {
 				query += " and ";
 			}
+			
+			query += "upper(t.nome_tarefa) like upper ('%" + seletor.getNomeTarefa() + "%')";
+			primeiro = false;
 		}
-
-		query += " upper(t.nome) like upper ('%" + seletor.getNomeTarefa() + "%')";
 
 		if (seletor.getTipoTarefa() != null) {
 			if (primeiro) {
 				query += " where ";
-
 			} else {
 				query += " and ";
 			}
-			query += " upper(t.tipo_tarefa) like upper ('%" + seletor.getTipoTarefa() + "%')";
+			query += "upper(t.tipo_tarefa) like upper ('%" + seletor.getTipoTarefa() + "%')";
 		}
 
-		if (seletor.isRealizado()) {
+		if (seletor.isRealizado() != null) {
 			if (primeiro) {
 				query += " where ";
 			} else {
 				query += " and ";
 			}
-			query += " t.realizado = " + seletor.isRealizado();
+			query += " t.realizada = " + seletor.isRealizado();
 		} else {
-			query += " t.realizado = " + seletor.isRealizado();
-
+			query += " t.realizada = " + seletor.isRealizado();
+			
 		}
 		return query;
 
@@ -312,7 +317,8 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		ResultSet resultadoItensTemplate = null;
 		Tarefa tarefa = null;
 
-		// Fazer uma consultar na tabela Tarefa pelo ID e verificando se a tabela é template ou não.
+		// Fazer uma consultar na tabela Tarefa pelo ID e verificando se a tabela é
+		// template ou não.
 		String queryTarefaTemplate = "SELECT * FROM tarefa.tarefas WHERE id_tarefa = " + idTarefaTemplate
 				+ " AND is_template = TRUE";
 
@@ -340,11 +346,11 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 					tarefa.setIdTarefa(resultado.getInt(1));
 				}
 
-				//Fazer uma consultar de todos os itens associado a tabela tarefa template.
+				// Fazer uma consultar de todos os itens associado a tabela tarefa template.
 				String queryItensTemplate = "SELECT * FROM tarefa.item WHERE id_tarefa = " + idTarefaTemplate;
 				resultadoItensTemplate = stmt.executeQuery(queryItensTemplate);
 
-				//Inserindo os itens da nova tabela tarefa.
+				// Inserindo os itens da nova tabela tarefa.
 				while (resultadoItensTemplate.next()) {
 					ItemTarefa item = new ItemTarefa();
 
@@ -360,7 +366,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 					if (resultado.next()) {
 						item.setIdItem(result.getInt(1));
 					}
-					
+
 				}
 			}
 
@@ -373,9 +379,8 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			Banco.closeStatement(stmt);
 			Banco.closeConnection(conn);
 		}
-		
+
 		return tarefa;
 	}
-	
-	
+
 }

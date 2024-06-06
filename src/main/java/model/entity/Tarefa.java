@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Tarefa {
 
 	private int idTarefa;
+	private Usuario idUsuario;
 	private String nomeTarefa;
 	private String tipoTarefa;
 	private ArrayList<ItemTarefa> itensTarefa;
@@ -16,10 +17,11 @@ public class Tarefa {
 
 	}
 
-	public Tarefa(int idTarefa, String nomeTarefa, String tipoTarefa, ArrayList<ItemTarefa> itensTarefa,
-			boolean realizado, boolean isTemplate) {
+	public Tarefa(int idTarefa, Usuario idUsuario, String nomeTarefa, String tipoTarefa,
+			ArrayList<ItemTarefa> itensTarefa, boolean realizado, boolean isTemplate) {
 		super();
 		this.idTarefa = idTarefa;
+		this.idUsuario = idUsuario;
 		this.nomeTarefa = nomeTarefa;
 		this.tipoTarefa = tipoTarefa;
 		this.itensTarefa = itensTarefa;
@@ -33,6 +35,14 @@ public class Tarefa {
 
 	public void setIdTarefa(int idTarefa) {
 		this.idTarefa = idTarefa;
+	}
+
+	public Usuario getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(Usuario idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
 	public String getNomeTarefa() {
@@ -74,6 +84,5 @@ public class Tarefa {
 	public void setTemplate(boolean isTemplate) {
 		this.isTemplate = isTemplate;
 	}
-	
 
 }

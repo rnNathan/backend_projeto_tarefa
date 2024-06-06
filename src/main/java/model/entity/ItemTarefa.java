@@ -3,19 +3,20 @@ package model.entity;
 public class ItemTarefa {
 
 	private int idItem;
+	private Tarefa idTarefa;
 	private String descricao;
 	private boolean realizado;
 
-	public ItemTarefa(int idItem, String descricao, boolean realizado) {
+	public ItemTarefa(int idItem, Tarefa idTarefa, String descricao, boolean realizado) {
 		super();
 		this.idItem = idItem;
+		this.idTarefa = idTarefa;
 		this.descricao = descricao;
 		this.realizado = realizado;
 	}
 
 	public ItemTarefa() {
 		super();
-
 	}
 
 	public int getIdItem() {
@@ -24,6 +25,14 @@ public class ItemTarefa {
 
 	public void setIdItem(int idItem) {
 		this.idItem = idItem;
+	}
+
+	public Tarefa getIdTarefa() {
+		return idTarefa;
+	}
+
+	public void setIdTarefa(Tarefa idTarefa) {
+		this.idTarefa = idTarefa;
 	}
 
 	public String getDescricao() {
@@ -41,7 +50,5 @@ public class ItemTarefa {
 	public void setRealizado(boolean realizado) {
 		this.realizado = realizado;
 	}
-	
-	
 
 }

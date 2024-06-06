@@ -1,7 +1,6 @@
 package model.entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class Usuario {
 
@@ -12,14 +11,13 @@ public class Usuario {
 	private String email;
 	private String login;
 	private String senha;
-	private ArrayList<Tarefa> listaTarefas;
 
 	public Usuario() {
 		super();
 	}
 
 	public Usuario(int idUsuario, String nome, String cpf, LocalDate dataNascimento, String email, String login,
-			String senha, ArrayList<Tarefa> listaTarefas) {
+			String senha) {
 		super();
 		this.idUsuario = idUsuario;
 		this.nome = nome;
@@ -28,7 +26,7 @@ public class Usuario {
 		this.email = email;
 		this.login = login;
 		this.senha = senha;
-		this.listaTarefas = listaTarefas;
+
 	}
 
 	public int getIdUsuario() {
@@ -85,14 +83,6 @@ public class Usuario {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
-	}
-
-	public ArrayList<Tarefa> getListaTarefas() {
-		return listaTarefas;
-	}
-
-	public void setListaTarefas(ArrayList<Tarefa> listaTarefas) {
-		this.listaTarefas = listaTarefas;
 	}
 
 }

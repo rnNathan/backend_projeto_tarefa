@@ -20,14 +20,14 @@ public class UsuarioService {
 		return repository.inserir(novoUsuario);
 	}
 
-	public boolean atualizar(Usuario usuarioEditado) {
+	public boolean alterar(Usuario usuarioEditado) {
 		validarCamposObrigatorios(usuarioEditado);
 
 		return repository.alterar(usuarioEditado);
 	}
 
 	public boolean excluir(int id) {
-		return (Boolean) null;
+		return repository.excluir(id);
 	}
 
 	public Usuario consultarPorId(int id) {

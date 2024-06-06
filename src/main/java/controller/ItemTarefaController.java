@@ -57,7 +57,13 @@ public class ItemTarefaController {
 	public ArrayList<ItemTarefa> listarTodos() {
 		return this.service.consultarTodos();
 	}
-	
-	
+
+	@GET
+	@Path("/listar/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<ItemTarefa> consultarTodosOsItensAssociadoUmaTarefa(@PathParam("id") int id) {
+		return this.service.consultarTodosOsItensAssociadoUmaTarefa(id);
+	}
 
 }

@@ -1,15 +1,12 @@
 package service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import exception.TarefaException;
-import jakarta.mail.FetchProfile.Item;
 import model.DTO.TemplateTarefaDTO;
 import model.entity.ItemTarefa;
 import model.entity.Tarefa;
-import model.entity.Usuario;
 import model.repository.ItemTarefaRepository;
 import model.repository.TarefaRepository;
 import seletor.TarefaSeletor;
@@ -19,9 +16,9 @@ public class TarefaService {
 	private TarefaRepository tarefaRepository = new TarefaRepository();
 	private ItemTarefaRepository itemRepository = new ItemTarefaRepository();
 
-	public Tarefa inserir(Tarefa novoTarefa) throws TarefaException {
-		this.validarCamposObrigatorios(novoTarefa);
-		return tarefaRepository.inserir(novoTarefa);
+	public Tarefa inserir(Tarefa novaTarefa) throws TarefaException {
+		this.validarCamposObrigatorios(novaTarefa);
+		return tarefaRepository.inserir(novaTarefa);
 	}
 
 	public Tarefa consultarPorId(int id) {
@@ -61,30 +58,30 @@ public class TarefaService {
 	}
 
 	public Tarefa criarTarefaAPartirDeTemplate(TemplateTarefaDTO templateDTO) throws TarefaException {
-		
+
 		Tarefa tarefaTemplate = tarefaRepository.consultarPorId(templateDTO.getIdTarefaTemplate());
-		
+
 		if (tarefaTemplate == null || tarefaTemplate.isTemplate()) {
 			throw new TarefaException("Tarefa não é um template");
 		}
-		
-		//Cria nova tarefa
+
+		// Cria nova tarefa
 		Tarefa novaTarefa = new Tarefa();
 		novaTarefa.setUsuario(tarefaTemplate.getUsuario());
 		novaTarefa.setTipoTarefa(tarefaTemplate.getTipoTarefa());
 		novaTarefa.setNomeTarefa(templateDTO.getNomeNovaTarefa());
 		novaTarefa = tarefaRepository.inserir(novaTarefa);
-		
-		//Cria os itens da nova tarefa
+
+		// Cria os itens da nova tarefa
 		for (ItemTarefa itemTarefaTemplate : tarefaTemplate.getItensTarefa()) {
 			ItemTarefa novoItem = new ItemTarefa();
 			novoItem.setDescricao(itemTarefaTemplate.getDescricao());
 			novoItem.setTarefa(novaTarefa);
-			
+
 			itemRepository.inserir(novoItem);
 		}
-	
-		//Chamado para atualizar a lista de itens
+
+		// Chamado para atualizar a lista de itens
 		novaTarefa = tarefaRepository.consultarPorId(novaTarefa.getIdTarefa());
 		return novaTarefa;
 	}
@@ -93,7 +90,7 @@ public class TarefaService {
 
 		Tarefa tarefa = new Tarefa();
 		ArrayList<ItemTarefa> list = itemRepository.consultarItensPedentes(tarefa.getIdTarefa());
-		
+
 		for (ItemTarefa itemTarefa : list) {
 			itemRepository.marcarItemComoRealizado(itemTarefa.getIdItem());
 		}
@@ -103,9 +100,9 @@ public class TarefaService {
 		return tarefa;
 
 	}
-	
+
 	private void validarCamposObrigatorios(Tarefa t) throws TarefaException {
-		
+
 		String mensagemValidacao = "";
 		if (t.getNomeTarefa() == null || t.getNomeTarefa().isEmpty()) {
 			mensagemValidacao += " - informe o nome \n";

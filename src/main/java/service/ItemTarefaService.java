@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import exception.TarefaException;
 import model.entity.ItemTarefa;
-import model.entity.Tarefa;
 import model.repository.ItemTarefaRepository;
 
 public class ItemTarefaService {
@@ -47,5 +46,10 @@ public class ItemTarefaService {
 				throw new TarefaException("Preencha o(s) seguinte(s) campo(s) \n " + mensagemValidacao);
 			}
 		}
+	}
+	
+	public ArrayList<ItemTarefa>consultarTodosOsItensAssociadoUmaTarefa(int id){
+		return itemRepository.consultarTodosOsItensAssociadoUmaTarefa(id);
+		
 	}
 }

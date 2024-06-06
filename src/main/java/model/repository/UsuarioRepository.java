@@ -70,7 +70,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 	@Override
 	public boolean alterar(Usuario usuarioEditado) {
 		boolean alterou = false;
-		String query = " UPDATE tarefa.usuario " + " SET nome=?, cpf=?, email=?, data_nascimento=?, "
+		String query = " UPDATE tarefa.usuario " + " SET nome=?, email=?, data_nascimento=?, "
 				+ " login=?, senha=? " + " WHERE id_usuario=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);

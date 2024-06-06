@@ -17,7 +17,7 @@ public class Tarefa {
 
 	}
 
-	public Tarefa(int idTarefa, Usuario Usuario, String nomeTarefa, String tipoTarefa,
+	public Tarefa(int idTarefa, Usuario usuario, String nomeTarefa, String tipoTarefa,
 			ArrayList<ItemTarefa> itensTarefa, Boolean realizado, Boolean isTemplate) {
 		super();
 		this.idTarefa = idTarefa;

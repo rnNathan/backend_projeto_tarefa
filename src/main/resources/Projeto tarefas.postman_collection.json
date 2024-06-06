@@ -19,7 +19,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -28,7 +29,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+					"raw": "{\n    \"nome\": \"João da Silva\",\n    \"cpf\": \"12345678900\",\n    \"dataNascimento\": \"1990-01-01\",\n    \"email\": \"joao@gmail.com\",\n    \"login\": \"joazinho01\",\n    \"senha\": \"senha123\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -36,12 +37,17 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/usuario/inserir",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
+						"backend_projeto_tarefa",
+						"rest",
+						"usuario",
+						"inserir"
 					]
 				},
 				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -59,7 +65,8 @@
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -67,18 +74,17 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/usuario/1",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"backend_projeto_tarefa",
+						"rest",
+						"usuario",
+						"1"
 					]
 				},
 				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -97,7 +103,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -106,7 +113,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+					"raw": "{\n    \"idUsuario\": 1,\n\t\"nome\": \"João da Silva\",\n    \"cpf\": \"12345678900\",\n    \"dataNascimento\": \"2001-09-22\",\n    \"email\": \"joazinho64@email.com\",\n    \"login\": \"jao123\",\n    \"senha\": \"xdxd123\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -114,18 +121,17 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/usuario/alterar",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"backend_projeto_tarefa",
+						"rest",
+						"usuario",
+						"alterar"
 					]
 				},
 				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -144,7 +150,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -161,18 +168,18 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/usuario/excluir/1",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"backend_projeto_tarefa",
+						"rest",
+						"usuario",
+						"excluir",
+						"1"
 					]
 				},
 				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
@@ -181,26 +188,12 @@
 		},
 		{
 			"name": "(Tarefa) Inserir",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Successful POST request\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-							"});",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+					"raw": "{\r\n    \"nomeTarefa\": \"Rancho\",\r\n    \"tipoTarefa\": \"Doméstica\",\r\n    \"realizado\": false,\r\n    \"isTemplate\": false,\r\n    \"usuario\": {\r\n        \"idUsuario\": 1\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -208,52 +201,41 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/tarefa/inserir",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
+						"backend_projeto_tarefa",
+						"rest",
+						"tarefa",
+						"inserir"
 					]
-				},
-				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "(Tarefa) Buscar por ID",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/tarefa/1",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"backend_projeto_tarefa",
+						"rest",
+						"tarefa",
+						"1"
 					]
-				},
-				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+				}
 			},
 			"response": []
 		},
@@ -268,7 +250,8 @@
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -276,18 +259,17 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/tarefa/listar",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"backend_projeto_tarefa",
+						"rest",
+						"tarefa",
+						"listar"
 					]
 				},
 				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -313,6 +295,15 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nomeTarefa\": \"Lavar louça\",\r\n    \"tipoTarefa\": \"Doméstica\",\r\n    \"realizado\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/tarefa/filtro",
 					"protocol": "http",
@@ -343,7 +334,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -352,7 +344,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+					"raw": "{\n    \"idTarefa\": 1,\n\t\"nomeTarefa\": \"Fazer relatório\",\n    \"tipoTarefa\": \"Profissional\",\n    \"realizada\": true,\n    \"isTemplate\": false\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -360,18 +352,17 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/tarefa/alterar",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"backend_projeto_tarefa",
+						"rest",
+						"tarefa",
+						"alterar"
 					]
 				},
 				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -390,7 +381,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -407,18 +399,18 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/tarefa/excluir/1",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"backend_projeto_tarefa",
+						"rest",
+						"tarefa",
+						"excluir",
+						"1"
 					]
 				},
 				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
@@ -437,7 +429,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -446,7 +439,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+					"raw": "{\n\t\"descricao\": \"Comprar comida\",\n    \"tarefa\": {\n        \"idTarefa\": 4\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -454,12 +447,17 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/item/inserir",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
+						"backend_projeto_tarefa",
+						"rest",
+						"item",
+						"inserir"
 					]
 				},
 				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -477,7 +475,8 @@
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -485,18 +484,55 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/item/1",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
+						"backend_projeto_tarefa",
+						"rest",
+						"item",
+						"1"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "(Item) Buscar item associado a tarefa",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/item/listar/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
 					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+					"port": "8080",
+					"path": [
+						"backend_projeto_tarefa",
+						"rest",
+						"item",
+						"listar",
+						"1"
 					]
 				},
 				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -514,7 +550,8 @@
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -522,55 +559,17 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/item/listar",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
-					]
-				},
-				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
-			},
-			"response": []
-		},
-		{
-			"name": "(Item) Buscar Todos Copy",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/info?id=1",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"backend_projeto_tarefa",
+						"rest",
+						"item",
+						"listar"
 					]
 				},
 				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -589,7 +588,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -598,7 +598,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+					"raw": "{\n    \"idItem\": 1,\n\t\"descricao\": \"cozinhar\",\n    \"realizado\": true\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -606,18 +606,17 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/item/alterar",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"backend_projeto_tarefa",
+						"rest",
+						"item",
+						"alterar"
 					]
 				},
 				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -636,7 +635,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -653,18 +653,18 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "http://localhost:8080/backend_projeto_tarefa/rest/item/excluir/2",
+					"protocol": "http",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"backend_projeto_tarefa",
+						"rest",
+						"item",
+						"excluir",
+						"2"
 					]
 				},
 				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."

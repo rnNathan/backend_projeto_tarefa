@@ -17,9 +17,8 @@ public class UsuarioService {
 	private TarefaRepository tarefaRepository = new TarefaRepository();
 
 	public Usuario inserir(Usuario novoUsuario) throws TarefaException {
-		
-		
-		this.validarCamposObrigatorios(novoUsuario);	
+
+		this.validarCamposObrigatorios(novoUsuario);
 		validarCpf(novoUsuario);
 
 		return repository.inserir(novoUsuario);
@@ -27,19 +26,20 @@ public class UsuarioService {
 
 	public boolean alterar(Usuario usuarioEditado) throws TarefaException {
 		validarCamposObrigatorios(usuarioEditado);
+		validarCamposPermitidos(usuarioEditado);
 
 		return repository.alterar(usuarioEditado);
 	}
 
-	public boolean excluir(int id) throws TarefaException{
+	public boolean excluir(int id) throws TarefaException {
 		ArrayList<Tarefa> listaTarefa = tarefaRepository.consultarTarefaAssociadaUmUsuario(id);
-		
+
 		if (listaTarefa.size() > 0) {
 			throw new TarefaException("Não pode ser excluido um usuario pois tem uma tarefa associado.");
-		}else {
+		} else {
 			return repository.excluir(id);
 		}
-			
+
 	}
 
 	public Usuario consultarPorId(int id) {
@@ -58,7 +58,7 @@ public class UsuarioService {
 
 	private void validarCamposObrigatorios(Usuario u) throws TarefaException {
 		String mensagemValidacao = "";
-		
+
 		if (u.getNome() == null || u.getNome().isEmpty()) {
 			mensagemValidacao += " - informe o nome \n";
 		}
@@ -83,4 +83,16 @@ public class UsuarioService {
 		}
 	}
 
+	private void validarCamposPermitidos(Usuario usuarioEditado) throws TarefaException {
+		Usuario usuarioOriginal = repository.consultarPorId(usuarioEditado.getIdUsuario());
+		if (usuarioOriginal == null) {
+			throw new TarefaException("Usuário não encontrado.");
+		}
+		if (!usuarioEditado.getNome().equalsIgnoreCase(usuarioOriginal.getNome().trim())) {
+			throw new TarefaException("O nome não pode ser alterado.");
+		}
+		if (!usuarioEditado.getCpf().equalsIgnoreCase(usuarioOriginal.getCpf())) {
+			throw new TarefaException("O CPF não pode ser alterado.");
+		}
+	}
 }

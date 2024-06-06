@@ -103,7 +103,6 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 				itemTarefa.setIdItem(resultado.getInt("id_item"));
 				itemTarefa.setDescricao(resultado.getString("descricao"));
 				itemTarefa.setRealizado(resultado.getBoolean("realizado"));
-
 			}
 
 		} catch (SQLException e) {

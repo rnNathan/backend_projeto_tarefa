@@ -30,14 +30,14 @@ public class UsuarioController {
 	@Path("/alterar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	public boolean alterar(Usuario novoUsuario) {
+	public boolean alterar(Usuario novoUsuario) throws TarefaException {
 		return usuarioService.alterar(novoUsuario);
 	}
 
 	@DELETE
 	@Path("/excluir/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public boolean excluir(@PathParam("id") int id) {
+	public boolean excluir(@PathParam("id") int id) throws TarefaException {
 		return this.usuarioService.excluir(id);
 	}
 

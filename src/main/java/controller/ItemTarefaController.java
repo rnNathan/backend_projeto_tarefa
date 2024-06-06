@@ -24,7 +24,7 @@ public class ItemTarefaController {
 	@Path("/inserir")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ItemTarefa inserir(ItemTarefa novoItem) {
+	public ItemTarefa inserir(ItemTarefa novoItem) throws TarefaException {
 		return this.service.inserir(novoItem);
 	}
 
@@ -57,6 +57,7 @@ public class ItemTarefaController {
 	public ArrayList<ItemTarefa> listarTodos() {
 		return this.service.consultarTodos();
 	}
+	
 	
 
 }

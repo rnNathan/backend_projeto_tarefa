@@ -3,14 +3,14 @@ package model.entity;
 public class ItemTarefa {
 
 	private int idItem;
-	private Tarefa idTarefa;
+	private Tarefa tarefa;
 	private String descricao;
 	private boolean realizado;
 
 	public ItemTarefa(int idItem, Tarefa idTarefa, String descricao, boolean realizado) {
 		super();
 		this.idItem = idItem;
-		this.idTarefa = idTarefa;
+		this.tarefa = idTarefa;
 		this.descricao = descricao;
 		this.realizado = realizado;
 	}
@@ -27,12 +27,12 @@ public class ItemTarefa {
 		this.idItem = idItem;
 	}
 
-	public Tarefa getIdTarefa() {
-		return idTarefa;
+	public Tarefa getTarefa() {
+		return tarefa;
 	}
 
-	public void setIdTarefa(Tarefa idTarefa) {
-		this.idTarefa = idTarefa;
+	public void setTarefa(Tarefa idTarefa) {
+		this.tarefa = idTarefa;
 	}
 
 	public String getDescricao() {

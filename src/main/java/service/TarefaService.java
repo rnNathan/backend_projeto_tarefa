@@ -5,8 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import exception.TarefaException;
+import jakarta.mail.FetchProfile.Item;
+import model.DTO.TemplateTarefaDTO;
 import model.entity.ItemTarefa;
 import model.entity.Tarefa;
+import model.entity.Usuario;
 import model.repository.ItemTarefaRepository;
 import model.repository.TarefaRepository;
 import seletor.TarefaSeletor;
@@ -16,7 +19,8 @@ public class TarefaService {
 	private TarefaRepository tarefaRepository = new TarefaRepository();
 	private ItemTarefaRepository itemRepository = new ItemTarefaRepository();
 
-	public Tarefa inserir(Tarefa novoTarefa) {
+	public Tarefa inserir(Tarefa novoTarefa) throws TarefaException {
+		this.validarCamposObrigatorios(novoTarefa);
 		return tarefaRepository.inserir(novoTarefa);
 	}
 
@@ -56,8 +60,33 @@ public class TarefaService {
 		return tarefaRepository.listarTemplates();
 	}
 
-	public Tarefa criarTarefaAPartirDeTemplate(int id) {
-		return tarefaRepository.criarTarefaAPartirDeTemplate(id);
+	public Tarefa criarTarefaAPartirDeTemplate(TemplateTarefaDTO templateDTO) throws TarefaException {
+		
+		Tarefa tarefaTemplate = tarefaRepository.consultarPorId(templateDTO.getIdTarefaTemplate());
+		
+		if (tarefaTemplate == null || tarefaTemplate.isTemplate()) {
+			throw new TarefaException("Tarefa não é um template");
+		}
+		
+		//Cria nova tarefa
+		Tarefa novaTarefa = new Tarefa();
+		novaTarefa.setUsuario(tarefaTemplate.getUsuario());
+		novaTarefa.setTipoTarefa(tarefaTemplate.getTipoTarefa());
+		novaTarefa.setNomeTarefa(templateDTO.getNomeNovaTarefa());
+		novaTarefa = tarefaRepository.inserir(novaTarefa);
+		
+		//Cria os itens da nova tarefa
+		for (ItemTarefa itemTarefaTemplate : tarefaTemplate.getItensTarefa()) {
+			ItemTarefa novoItem = new ItemTarefa();
+			novoItem.setDescricao(itemTarefaTemplate.getDescricao());
+			novoItem.setTarefa(novaTarefa);
+			
+			itemRepository.inserir(novoItem);
+		}
+	
+		//Chamado para atualizar a lista de itens
+		novaTarefa = tarefaRepository.consultarPorId(novaTarefa.getIdTarefa());
+		return novaTarefa;
 	}
 
 	public Tarefa concluirTarefa() {
@@ -73,6 +102,21 @@ public class TarefaService {
 
 		return tarefa;
 
+	}
+	
+	private void validarCamposObrigatorios(Tarefa t) throws TarefaException {
+		
+		String mensagemValidacao = "";
+		if (t.getNomeTarefa() == null || t.getNomeTarefa().isEmpty()) {
+			mensagemValidacao += " - informe o nome \n";
+		}
+		if (t.getTipoTarefa() == null || t.getTipoTarefa().isEmpty()) {
+			mensagemValidacao += " - informe a data de nascimento \n";
+		}
+		if (!mensagemValidacao.isEmpty()) {
+
+			throw new TarefaException("Preencha o(s) seguinte(s) campo(s) \n " + mensagemValidacao);
+		}
 	}
 
 }

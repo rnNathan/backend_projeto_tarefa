@@ -4,13 +4,15 @@ import java.util.ArrayList;
 
 import exception.TarefaException;
 import model.entity.ItemTarefa;
+import model.entity.Tarefa;
 import model.repository.ItemTarefaRepository;
 
 public class ItemTarefaService {
 
 	private ItemTarefaRepository itemRepository = new ItemTarefaRepository();
 
-	public ItemTarefa inserir(ItemTarefa novoItem) {
+	public ItemTarefa inserir(ItemTarefa novoItem) throws TarefaException {
+		this.validarCamposObrigatorios(novoItem);
 		return itemRepository.inserir(novoItem);
 	}
 
@@ -34,4 +36,16 @@ public class ItemTarefaService {
 		}
 	}
 
+	private void validarCamposObrigatorios(ItemTarefa i) throws TarefaException {
+
+		String mensagemValidacao = "";
+
+		if (i.getDescricao() == null || i.getDescricao().isEmpty()) {
+			mensagemValidacao += " - informe o nome \n";
+
+			if (!mensagemValidacao.isEmpty()) {
+				throw new TarefaException("Preencha o(s) seguinte(s) campo(s) \n " + mensagemValidacao);
+			}
+		}
+	}
 }

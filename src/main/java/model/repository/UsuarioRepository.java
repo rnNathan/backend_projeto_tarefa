@@ -15,7 +15,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 	@Override
 	public Usuario inserir(Usuario novoUsuario) {
 
-		String query = "insert into tarefa.usuario (nome, cpf, email, data_nascimento, login, senha) values (?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO tarefa.usuario (nome, cpf, email, data_nascimento, login, senha) VALUES (?, ?, ?, ?, ?, ?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 

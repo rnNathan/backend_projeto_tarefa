@@ -13,6 +13,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import model.DTO.TemplateTarefaDTO;
 import model.entity.ItemTarefa;
 import model.entity.Tarefa;
 import seletor.TarefaSeletor;
@@ -27,7 +28,7 @@ public class TarefaController {
 	@Path("/inserir")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Tarefa inserir(Tarefa novaTarefa) {
+	public Tarefa inserir(Tarefa novaTarefa) throws TarefaException {
 		return this.tarefaService.inserir(novaTarefa);
 	}
 
@@ -95,8 +96,8 @@ public class TarefaController {
 	@Path("/inserir-template")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Tarefa criarTarefaAPartirDeTemplate(int id) {
-		return this.tarefaService.criarTarefaAPartirDeTemplate(id);
+	public Tarefa criarTarefaAPartirDeTemplate(TemplateTarefaDTO dto) throws TarefaException {
+		return this.tarefaService.criarTarefaAPartirDeTemplate(dto);
 	}
 	
 	@PUT

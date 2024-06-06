@@ -1,9 +1,12 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import exception.TarefaException;
+import model.entity.Tarefa;
 import model.entity.Usuario;
+import model.repository.TarefaRepository;
 import model.repository.UsuarioRepository;
 
 public class UsuarioService {
@@ -11,23 +14,32 @@ public class UsuarioService {
 	private static final int MINIMO_CARACTERES = 5;
 	private static final int MAXIMO_CARACTERES = 12;
 	private UsuarioRepository repository = new UsuarioRepository();
+	private TarefaRepository tarefaRepository = new TarefaRepository();
 
 	public Usuario inserir(Usuario novoUsuario) throws TarefaException {
-		validarCamposObrigatorios(novoUsuario);
-
+		
+		
+		this.validarCamposObrigatorios(novoUsuario);	
 		validarCpf(novoUsuario);
 
 		return repository.inserir(novoUsuario);
 	}
 
-	public boolean alterar(Usuario usuarioEditado) {
+	public boolean alterar(Usuario usuarioEditado) throws TarefaException {
 		validarCamposObrigatorios(usuarioEditado);
 
 		return repository.alterar(usuarioEditado);
 	}
 
-	public boolean excluir(int id) {
-		return repository.excluir(id);
+	public boolean excluir(int id) throws TarefaException{
+		ArrayList<Tarefa> listaTarefa = tarefaRepository.consultarTarefaAssociadaUmUsuario(id);
+		
+		if (listaTarefa.size() > 0) {
+			throw new TarefaException("Não pode ser excluido um usuario pois tem uma tarefa associado.");
+		}else {
+			return repository.excluir(id);
+		}
+			
 	}
 
 	public Usuario consultarPorId(int id) {
@@ -44,8 +56,9 @@ public class UsuarioService {
 		}
 	}
 
-	private void validarCamposObrigatorios(Usuario u) {
+	private void validarCamposObrigatorios(Usuario u) throws TarefaException {
 		String mensagemValidacao = "";
+		
 		if (u.getNome() == null || u.getNome().isEmpty()) {
 			mensagemValidacao += " - informe o nome \n";
 		}
@@ -55,10 +68,10 @@ public class UsuarioService {
 		if (u.getCpf() == null || u.getCpf().isEmpty() || u.getCpf().length() != 11) {
 			mensagemValidacao += " - informe o CPF \n";
 		}
-		if (u.getEmail().isEmpty()) {
+		if (u.getEmail().isEmpty() || u.getEmail() == null) {
 			mensagemValidacao += " - informe o email \n";
 		}
-		if (u.getSenha().equals(MINIMO_CARACTERES) || u.getSenha().equals(MAXIMO_CARACTERES)) {
+		if (u.getSenha().length() < MINIMO_CARACTERES || u.getSenha().length() > MAXIMO_CARACTERES) {
 			mensagemValidacao += " - insira uma senha entre 5 e 12 caracteres \n";
 		}
 		if (u.getLogin() == null) {
@@ -66,8 +79,7 @@ public class UsuarioService {
 		}
 
 		if (!mensagemValidacao.isEmpty()) {
-
-			System.out.println(("Preencha o(s) seguinte(s) campo(s) \n " + mensagemValidacao));
+			throw new TarefaException("Preencha o(s) seguinte(s) campo(s) \n " + mensagemValidacao);
 		}
 	}
 

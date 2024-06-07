@@ -105,13 +105,14 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			if (resultado.next()) {
 				tarefa = new Tarefa();
 				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
-
+				
 				UsuarioRepository usuarioReposotory = new UsuarioRepository();
 				tarefa.setUsuario(usuarioReposotory.consultarPorId(resultado.getInt("id_usuario")));
 
 				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
 				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
 				tarefa.setRealizado(resultado.getBoolean("realizada"));
+				tarefa.setTemplate(resultado.getBoolean("isTemplate"));
 				ItemTarefaRepository itemTarefa = new ItemTarefaRepository();
 				tarefa.setItensTarefa(
 						itemTarefa.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));
@@ -147,6 +148,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
 				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
 				tarefa.setRealizado(resultado.getBoolean("realizada"));
+				tarefa.setTemplate(resultado.getBoolean("isTemplate"));
 				ItemTarefaRepository repository = new ItemTarefaRepository();
 				tarefa.setItensTarefa(
 						repository.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));

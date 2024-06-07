@@ -61,7 +61,7 @@ public class TarefaService {
 
 		Tarefa tarefaTemplate = tarefaRepository.consultarPorId(templateDTO.getIdTarefaTemplate());
 
-		if (tarefaTemplate == null || tarefaTemplate.isTemplate()) {
+		if (tarefaTemplate == null || tarefaTemplate.isTemplate() == false) {
 			throw new TarefaException("Tarefa não é um template");
 		}
 

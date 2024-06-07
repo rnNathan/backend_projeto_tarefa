@@ -1,5 +1,7 @@
 package model.DTO;
 
+;
+
 public class TemplateTarefaDTO {
 
 	private int idTarefaTemplate;

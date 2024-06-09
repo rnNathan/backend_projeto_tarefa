@@ -15,7 +15,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 
+
+@Provider
 public class ExceptionHandler implements ExceptionMapper<Exception> {
 
 	protected final Logger log = Logger.getLogger(getClass().getName());

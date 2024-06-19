@@ -108,7 +108,7 @@ public class TarefaService {
 			mensagemValidacao += " - informe o nome \n";
 		}
 		if (t.getTipoTarefa() == null || t.getTipoTarefa().isEmpty()) {
-			mensagemValidacao += " - informe a data de nascimento \n";
+			mensagemValidacao += " - informe o tipo da tarefa \n";
 		}
 		if (!mensagemValidacao.isEmpty()) {
 

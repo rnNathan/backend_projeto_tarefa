@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import exception.TarefaException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -10,6 +13,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import model.entity.Tarefa;
 import model.entity.Usuario;
 import service.UsuarioService;
 
@@ -47,5 +51,13 @@ public class UsuarioController {
 	public Usuario consultarPorId(@PathParam("id") int id) {
 		return usuarioService.consultarPorId(id);
 	}
+	@GET
+	@Path("/listar")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Usuario> consultarTodos() {
+		return this.usuarioService.consultarTodas();
+	}
+
 
 }

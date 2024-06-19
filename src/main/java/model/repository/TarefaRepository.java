@@ -225,16 +225,14 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		}
 
 		if (seletor.isRealizado() != null) {
-			if (primeiro) {
-				query += " where ";
-			} else {
-				query += " and ";
-			}
-			query += " t.realizada = " + seletor.isRealizado();
-		} else {
-			query += " t.realizada = " + seletor.isRealizado();
-			
-		}
+            if (primeiro) {
+                query += " where ";
+                primeiro = false;
+            } else {
+                query += " and ";
+            }
+            query += "t.realizada = " + (seletor.isRealizado() ? 1 : 0);
+        }
 		return query;
 
 	}

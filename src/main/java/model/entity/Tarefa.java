@@ -16,7 +16,7 @@ public class Tarefa {
 		super();
 
 	}
-
+	
 	public Tarefa(int idTarefa, Usuario usuario, String nomeTarefa, String tipoTarefa,
 			ArrayList<ItemTarefa> itensTarefa, Boolean realizado, Boolean isTemplate) {
 		super();
@@ -69,7 +69,7 @@ public class Tarefa {
 		this.itensTarefa = itensTarefa;
 	}
 
-	public Boolean isRealizado() {
+	public Boolean getRealizado() {
 		return realizado;
 	}
 
@@ -77,12 +77,13 @@ public class Tarefa {
 		this.realizado = realizado;
 	}
 
-	public Boolean isTemplate() {
+	public Boolean getIsTemplate() {
 		return isTemplate;
 	}
 
-	public void setTemplate(Boolean isTemplate) {
+	public void setIsTemplate(Boolean isTemplate) {
 		this.isTemplate = isTemplate;
 	}
 
+	
 }

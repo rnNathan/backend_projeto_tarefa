@@ -74,9 +74,8 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		try {
 			pstmt.setString(1, tarefaSelecionada.getNomeTarefa());
 			pstmt.setString(2, tarefaSelecionada.getTipoTarefa());
-			pstmt.setBoolean(3, tarefaSelecionada.isRealizado());
-			pstmt.setBoolean(4, tarefaSelecionada.isTemplate());
-			
+			pstmt.setBoolean(3, tarefaSelecionada.getRealizado());
+			pstmt.setBoolean(4, tarefaSelecionada.getIsTemplate());
 			pstmt.setInt(5, tarefaSelecionada.getIdTarefa());
 			alterou = pstmt.executeUpdate() > 0;
 
@@ -112,7 +111,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
 				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
 				tarefa.setRealizado(resultado.getBoolean("realizada"));
-				tarefa.setTemplate(resultado.getBoolean("isTemplate"));
+				tarefa.setIsTemplate(resultado.getBoolean("isTemplate"));
 				ItemTarefaRepository itemTarefa = new ItemTarefaRepository();
 				tarefa.setItensTarefa(
 						itemTarefa.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));
@@ -148,7 +147,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
 				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
 				tarefa.setRealizado(resultado.getBoolean("realizada"));
-				tarefa.setTemplate(resultado.getBoolean("isTemplate"));
+				tarefa.setIsTemplate(resultado.getBoolean("isTemplate"));
 				ItemTarefaRepository repository = new ItemTarefaRepository();
 				tarefa.setItensTarefa(
 						repository.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));
@@ -293,7 +292,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
 				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
 				tarefa.setRealizado(resultado.getBoolean("realizada"));
-				tarefa.setTemplate(resultado.getBoolean("is_template"));
+				tarefa.setIsTemplate(resultado.getBoolean("is_template"));
 				templates.add(tarefa);
 			}
 		} catch (SQLException e) {

@@ -34,7 +34,7 @@ public class TarefaService {
 	}
 
 	public boolean excluir(int id) throws TarefaException {
-		if (tarefaRepository.consultarPorId(id) != null && tarefaRepository.consultarPorId(id).isRealizado()) {
+		if (tarefaRepository.consultarPorId(id) != null && tarefaRepository.consultarPorId(id).getRealizado()) {
 			return tarefaRepository.excluir(id);
 		} else {
 			throw new TarefaException("Tarefa não foi realizada, portanto não pode ser excluídos!");
@@ -61,7 +61,7 @@ public class TarefaService {
 
 		Tarefa tarefaTemplate = tarefaRepository.consultarPorId(templateDTO.getIdTarefaTemplate());
 
-		if (tarefaTemplate == null || tarefaTemplate.isTemplate() == false) {
+		if (tarefaTemplate == null || tarefaTemplate.getIsTemplate() == false) {
 			throw new TarefaException("Tarefa não é um template");
 		}
 

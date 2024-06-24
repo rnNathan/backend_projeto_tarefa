@@ -28,11 +28,8 @@ public class ItemTarefaService {
 	}
 
 	public boolean excluir(int id) throws TarefaException {
-		if (itemRepository.consultarPorId(id) != null && itemRepository.consultarPorId(id).isRealizado()) {
 			return itemRepository.excluir(id);
-		} else {
-			throw new TarefaException("Itens da tarefa não foram realizados, portanto não podem ser excluídos!");
-		}
+		
 	}
 
 	private void validarCamposObrigatorios(ItemTarefa i) throws TarefaException {

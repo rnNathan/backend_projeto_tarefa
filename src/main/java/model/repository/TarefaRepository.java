@@ -18,7 +18,6 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		String query = "INSERT INTO tarefa.tarefas (id_usuario, nome_tarefa, tipo_tarefa) VALUES (?, ?, ?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
-
 		try {
 			pstmt.setInt(1, novaTarefa.getUsuario().getIdUsuario());
 			pstmt.setString(2, novaTarefa.getNomeTarefa());
@@ -28,7 +27,6 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			if (resultado.next()) {
 				novaTarefa.setIdTarefa(resultado.getInt(1));
 			}
-
 		} catch (SQLException e) {
 			System.out.println("Erro ao salvar tarefa");
 			System.out.println("Erro: " + e.getMessage());
@@ -36,7 +34,6 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			Banco.closePreparedStatement(pstmt);
 			Banco.closeConnection(conn);
 		}
-
 		return novaTarefa;
 	}
 
@@ -46,21 +43,17 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		boolean retorno = false;
-
 		try {
 			if (stmt.executeUpdate(query) == 1) {
 				retorno = true;
 			}
-
 		} catch (SQLException e) {
 			System.out.println("ERRO AO EXCLUIR UMA TAREFA.");
 			System.out.println("ERRO: " + e.getMessage());
 		} finally {
 			Banco.closeStatement(stmt);
 			Banco.closeConnection(conn);
-
 		}
-
 		return retorno;
 	}
 
@@ -70,7 +63,6 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 		boolean alterou = false;
-
 		try {
 			pstmt.setString(1, tarefaSelecionada.getNomeTarefa());
 			pstmt.setString(2, tarefaSelecionada.getTipoTarefa());
@@ -78,16 +70,13 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			pstmt.setBoolean(4, tarefaSelecionada.getIsTemplate());
 			pstmt.setInt(5, tarefaSelecionada.getIdTarefa());
 			alterou = pstmt.executeUpdate() > 0;
-
 		} catch (Exception e) {
 			System.out.println("Erro ao atualizar tarefa");
 			System.out.println("Erro: " + e.getMessage());
 		} finally {
 			Banco.closeStatement(pstmt);
 			Banco.closeConnection(conn);
-
 		}
-
 		return alterou;
 	}
 
@@ -102,20 +91,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		try {
 			resultado = stmt.executeQuery(query);
 			if (resultado.next()) {
-				tarefa = new Tarefa();
-				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
-				
-				UsuarioRepository usuarioReposotory = new UsuarioRepository();
-				tarefa.setUsuario(usuarioReposotory.consultarPorId(resultado.getInt("id_usuario")));
-
-				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
-				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
-				tarefa.setRealizado(resultado.getBoolean("realizada"));
-				tarefa.setIsTemplate(resultado.getBoolean("isTemplate"));
-				ItemTarefaRepository itemTarefa = new ItemTarefaRepository();
-				tarefa.setItensTarefa(
-						itemTarefa.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));
-
+				tarefa = this.converterResultSetParaTarefa(resultado);
 			}
 
 		} catch (SQLException e) {
@@ -126,6 +102,24 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			Banco.closeStatement(stmt);
 			Banco.closeConnection(conn);
 		}
+		return tarefa;
+	}
+	
+	private Tarefa converterResultSetParaTarefa(ResultSet resultado) throws SQLException{
+		Tarefa tarefa = new Tarefa();
+		tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
+		
+		UsuarioRepository usuarioReposotory = new UsuarioRepository();
+		tarefa.setUsuario(usuarioReposotory.consultarPorId(resultado.getInt("id_usuario")));
+
+		tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
+		tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
+		tarefa.setRealizado(resultado.getBoolean("realizada"));
+		tarefa.setIsTemplate(resultado.getBoolean("isTemplate"));
+		ItemTarefaRepository itemTarefa = new ItemTarefaRepository();
+		tarefa.setItensTarefa(
+				itemTarefa.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));
+		
 		return tarefa;
 	}
 
@@ -157,8 +151,13 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar todos as tarefas no banco.");
 			System.out.println("ERRO: " + e.getMessage());
+			
+		}finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
 		}
-
+		
 		return listaTarefas;
 	}
 
@@ -181,56 +180,43 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		try {
 			resultado = stmt.executeQuery(query);
 			while (resultado.next()) {
-				tarefa = new Tarefa();
-				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
-				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
-				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
-				tarefa.setRealizado(resultado.getBoolean("realizada"));
-				ItemTarefaRepository itemTarefa = new ItemTarefaRepository();
-				tarefa.setItensTarefa(
-						itemTarefa.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));
+				tarefa = this.converterResultSetParaTarefa(resultado);
 				listaTarefas.add(tarefa);
 			}
 
 		} catch (SQLException e) {
 			System.out.println("Erro ao consultar tarefas com seletor no banco.");
 			System.out.println("ERRO: " + e.getMessage());
+		}finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
 		}
 
 		return listaTarefas;
 	}
 
 	private String incluirFiltros(TarefaSeletor seletor, String query) {
-		boolean primeiro = true;
-
-		if (seletor.getNomeTarefa() != null) {
-			if (primeiro) {
-				query += " where ";
-			} else {
-				query += " and ";
-			}
-			
-			query += "upper(t.nome_tarefa) like upper ('%" + seletor.getNomeTarefa() + "%')";
-			primeiro = false;
+		
+		query += " where 1 = 1 ";
+		
+		if (seletor.getIdUsuario() != null) {
+			query += " AND id_usuario =  " + seletor.getIdUsuario();
+		}
+		if (seletor.getNomeTarefa() != null) {	
+			query += " AND upper(t.nome_tarefa) like upper ('%" + seletor.getNomeTarefa() + "%') ";
 		}
 
 		if (seletor.getTipoTarefa() != null) {
-			if (primeiro) {
-				query += " where ";
-			} else {
-				query += " and ";
-			}
-			query += "upper(t.tipo_tarefa) like upper ('%" + seletor.getTipoTarefa() + "%')";
+			query += " AND upper(t.tipo_tarefa) like upper ('%" + seletor.getTipoTarefa() + "%') ";
 		}
 
 		if (seletor.isRealizado() != null) {
-            if (primeiro) {
-                query += " where ";
-                primeiro = false;
-            } else {
-                query += " and ";
-            }
-            query += "t.realizada = " + (seletor.isRealizado() ? 1 : 0);
+            query += " AND t.realizada = " + (seletor.isRealizado() ? 1 : 0);
+        }
+		
+		if (seletor.getIsTemplate() != null) {
+            query += " AND t.isTemplate = " + (seletor.getIsTemplate() ? 1 : 0);
         }
 		return query;
 
@@ -238,17 +224,19 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 
 	public int contarTotalDeRegistro(TarefaSeletor seletor) {
 
-		String query = "select t.* from tarefa.tarefas t ";
+		String query = "select COUNT(t.id_tarefa) from tarefa.tarefas t";
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ResultSet resultado = null;
 		int totalRegistros = 0;
+
 
 		query = incluirFiltros(seletor, query);
 		try {
 			resultado = stmt.executeQuery(query);
 			if (resultado.next()) {
 				totalRegistros += resultado.getInt(1);
+				
 			}
 		} catch (Exception e) {
 			System.out.println("ERRO AO CONSULTAR TOTAL DE TAREFAS!");
@@ -276,67 +264,5 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		return totalPaginas;
 
 	}
-
-	public List<Tarefa> listarTemplates() {
-		String query = "SELECT * FROM tarefa.tarefas WHERE is_template = TRUE";
-		Connection conn = Banco.getConnection();
-		Statement stmt = Banco.getStatement(conn);
-		ResultSet resultado = null;
-		List<Tarefa> templates = new ArrayList<>();
-
-		try {
-			resultado = stmt.executeQuery(query);
-			while (resultado.next()) {
-				Tarefa tarefa = new Tarefa();
-				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
-				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
-				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
-				tarefa.setRealizado(resultado.getBoolean("realizada"));
-				tarefa.setIsTemplate(resultado.getBoolean("is_template"));
-				templates.add(tarefa);
-			}
-		} catch (SQLException e) {
-			System.out.println("Erro ao listar templates de tarefa.");
-			System.out.println("ERRO: " + e.getMessage());
-		} finally {
-			Banco.closeResultSet(resultado);
-			Banco.closeStatement(stmt);
-			Banco.closeConnection(conn);
-		}
-		return templates;
-	}
-
 	
-	public ArrayList<Tarefa> consultarTarefaAssociadaUmUsuario(int idUsuario) {
-		ArrayList<Tarefa> listaTarefas = new ArrayList<Tarefa>();
-
-		String query = "SELECT * FROM tarefa.tarefas where id_usuario =" + idUsuario ;
-		Connection conn = Banco.getConnection();
-		Statement stmt = Banco.getStatement(conn);
-		Tarefa tarefa = null;
-		ResultSet resultado = null;
-
-		try {
-			resultado = stmt.executeQuery(query);
-			while (resultado.next()) {
-				tarefa = new Tarefa();
-				tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
-				tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
-				tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
-				tarefa.setRealizado(resultado.getBoolean("realizada"));
-				ItemTarefaRepository repository = new ItemTarefaRepository();
-				tarefa.setItensTarefa(
-						repository.consultarTodosOsItensAssociadoUmaTarefa(resultado.getInt("id_tarefa")));
-				listaTarefas.add(tarefa);
-			}
-
-		} catch (SQLException e) {
-			System.out.println("Erro ao consultar todos as tarefas no banco.");
-			System.out.println("ERRO: " + e.getMessage());
-		}
-
-		return listaTarefas;
-	}
-	
-
 }

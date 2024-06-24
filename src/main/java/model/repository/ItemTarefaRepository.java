@@ -148,6 +148,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 	}
 
 	public ArrayList<ItemTarefa> consultarTodosOsItensAssociadoUmaTarefa(int id) {
+		
 		ArrayList<ItemTarefa> listaItemTarefa = new ArrayList<ItemTarefa>();
 		String query = "SELECT * FROM  tarefa.item where id_tarefa =" + id;
 		Connection conn = Banco.getConnection();
@@ -174,12 +175,10 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 			Banco.closeConnection(conn);
 
 		}
-
 		return listaItemTarefa;
-
 	}
 
-	public ArrayList<ItemTarefa> consultarItensPedentes(int id) {
+	public ArrayList<ItemTarefa> consultarItensPendentes(int id) {
 		ArrayList<ItemTarefa> listaItemTarefa = new ArrayList<ItemTarefa>();
 		String query = "SELECT * FROM tarefa.item where id_tarefa = " + id + " AND realizado = false";
 		Connection conn = Banco.getConnection();
@@ -212,11 +211,11 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 	}
 
 	public boolean marcarItemComoRealizado(int idItem) {
+		
 		String query = "UPDATE tarefa.item set realizado = true where id_item = " + idItem;
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 		boolean retorno = false;
-
 		try {
 			retorno = pstmt.executeUpdate() > 0;
 
@@ -226,9 +225,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 		} finally {
 			Banco.closeStatement(pstmt);
 			Banco.closeConnection(conn);
-
 		}
-
 		return retorno;
 
 	}

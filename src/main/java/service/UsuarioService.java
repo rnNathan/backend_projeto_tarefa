@@ -8,6 +8,7 @@ import model.entity.Tarefa;
 import model.entity.Usuario;
 import model.repository.TarefaRepository;
 import model.repository.UsuarioRepository;
+import seletor.TarefaSeletor;
 
 public class UsuarioService {
 
@@ -32,10 +33,13 @@ public class UsuarioService {
 	}
 
 	public boolean excluir(int id) throws TarefaException {
-		ArrayList<Tarefa> listaTarefa = tarefaRepository.consultarTarefaAssociadaUmUsuario(id);
-
-		if (listaTarefa.size() > 0) {
-			throw new TarefaException("Não pode ser excluido um usuario pois tem uma tarefa associado.");
+		
+		TarefaSeletor seletor = new TarefaSeletor();
+		seletor.setIdUsuario(id);
+		
+		ArrayList<Tarefa> listaTarefasUsuario = tarefaRepository.consultarPorFiltro(seletor);
+		if (listaTarefasUsuario.size() > 0) {
+			throw new TarefaException("Não pode ser excluído um usuário pois tem uma tarefa associada.");
 		} else {
 			return repository.excluir(id);
 		}

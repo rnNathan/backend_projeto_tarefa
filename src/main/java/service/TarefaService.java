@@ -34,11 +34,8 @@ public class TarefaService {
 	}
 
 	public boolean excluir(int id) throws TarefaException {
-		if (tarefaRepository.consultarPorId(id) != null && tarefaRepository.consultarPorId(id).getRealizado()) {
-			return tarefaRepository.excluir(id);
-		} else {
-			throw new TarefaException("Tarefa não foi realizada, portanto não pode ser excluídos!");
-		}
+		return tarefaRepository.excluir(id);
+
 	}
 
 	public ArrayList<Tarefa> consultarPorFiltro(TarefaSeletor seletor) {
@@ -54,7 +51,9 @@ public class TarefaService {
 	}
 
 	public List<Tarefa> listaTemplate() {
-		return tarefaRepository.listarTemplates();
+		TarefaSeletor seletor = new TarefaSeletor();
+		seletor.setIsTemplate(true);
+		return tarefaRepository.consultarPorFiltro(seletor);
 	}
 
 	public Tarefa criarTarefaAPartirDeTemplate(TemplateTarefaDTO templateDTO) throws TarefaException {
@@ -87,16 +86,14 @@ public class TarefaService {
 	}
 
 	public Tarefa concluirTarefa() {
-
 		Tarefa tarefa = new Tarefa();
-		ArrayList<ItemTarefa> list = itemRepository.consultarItensPedentes(tarefa.getIdTarefa());
+		ArrayList<ItemTarefa> list = itemRepository.consultarItensPendentes(tarefa.getIdTarefa());
 
 		for (ItemTarefa itemTarefa : list) {
 			itemRepository.marcarItemComoRealizado(itemTarefa.getIdItem());
 		}
-
 		tarefa = tarefaRepository.consultarPorId(tarefa.getIdTarefa());
-
+	
 		return tarefa;
 
 	}

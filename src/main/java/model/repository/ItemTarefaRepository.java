@@ -19,7 +19,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 
 		try {
-			pstmt.setInt(1, novoItem.getTarefa().getIdTarefa());
+			pstmt.setInt(1, novoItem.getIdTarefa());
 			pstmt.setString(2, novoItem.getDescricao());
 			pstmt.execute();
 			ResultSet resultado = pstmt.getGeneratedKeys();

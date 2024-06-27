@@ -75,7 +75,7 @@ public class TarefaService {
 		for (ItemTarefa itemTarefaTemplate : tarefaTemplate.getItensTarefa()) {
 			ItemTarefa novoItem = new ItemTarefa();
 			novoItem.setDescricao(itemTarefaTemplate.getDescricao());
-			novoItem.setTarefa(novaTarefa);
+			novoItem.setIdTarefa(novaTarefa.getIdTarefa());
 
 			itemRepository.inserir(novoItem);
 		}

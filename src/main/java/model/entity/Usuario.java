@@ -2,6 +2,8 @@ package model.entity;
 
 import java.time.LocalDate;
 
+import enums.PerfilAcesso;
+
 public class Usuario {
 
 	private int idUsuario;
@@ -9,23 +11,24 @@ public class Usuario {
 	private String cpf;
 	private LocalDate dataNascimento;
 	private String email;
-	private String login;
+	private PerfilAcesso perfil;
+	private String idSessao;
 	private String senha;
 
 	public Usuario() {
 		super();
 	}
 
-	public Usuario(int idUsuario, String nome, String cpf, LocalDate dataNascimento, String email, String login,
-			String senha) {
+	public Usuario(int idUsuario, String nome, String cpf, LocalDate dataNascimento, String email,
+			String senha, PerfilAcesso perfil) {
 		super();
 		this.idUsuario = idUsuario;
 		this.nome = nome;
 		this.cpf = cpf;
 		this.dataNascimento = dataNascimento;
 		this.email = email;
-		this.login = login;
 		this.senha = senha;
+		this.perfil = perfil;
 
 	}
 
@@ -69,14 +72,6 @@ public class Usuario {
 		this.email = email;
 	}
 
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
 	public String getSenha() {
 		return senha;
 	}
@@ -84,5 +79,23 @@ public class Usuario {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+
+	public PerfilAcesso getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil(PerfilAcesso perfil) {
+		this.perfil = perfil;
+	}
+
+	public String getIdSessao() {
+		return idSessao;
+	}
+
+	public void setIdSessao(String idSessao) {
+		this.idSessao = idSessao;
+	}
+	
+	
 
 }

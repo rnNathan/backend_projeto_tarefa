@@ -3,6 +3,7 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 
+import enums.PerfilAcesso;
 import exception.TarefaException;
 import model.entity.Tarefa;
 import model.entity.Usuario;
@@ -21,13 +22,22 @@ public class UsuarioService {
 
 		this.validarCamposObrigatorios(novoUsuario);
 		validarCpf(novoUsuario);
+		validarPerfilUsuario(novoUsuario);
 
 		return repository.inserir(novoUsuario);
 	}
+	
+	private void validarPerfilUsuario(Usuario umUsuario) {
+		if(umUsuario.getPerfil() == null) {
+			umUsuario.setPerfil(PerfilAcesso.USUARIO);
+		}
+	}
 
 	public boolean alterar(Usuario usuarioEditado) throws TarefaException {
+		validarPerfilUsuario(usuarioEditado);
 		validarCamposObrigatorios(usuarioEditado);
 		validarCamposPermitidos(usuarioEditado);
+		
 
 		return repository.alterar(usuarioEditado);
 	}
@@ -78,10 +88,6 @@ public class UsuarioService {
 		if (u.getSenha().length() < MINIMO_CARACTERES || u.getSenha().length() > MAXIMO_CARACTERES) {
 			mensagemValidacao += " - insira uma senha entre 5 e 12 caracteres \n";
 		}
-		if (u.getLogin() == null) {
-			mensagemValidacao += " - informe o login ";
-		}
-
 		if (!mensagemValidacao.isEmpty()) {
 			throw new TarefaException("Preencha o(s) seguinte(s) campo(s) \n " + mensagemValidacao);
 		}

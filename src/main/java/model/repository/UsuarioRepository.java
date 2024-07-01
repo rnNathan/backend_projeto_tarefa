@@ -8,28 +8,27 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import enums.PerfilAcesso;
+import model.dto.UsuarioDTO;
 import model.entity.Usuario;
+import util.StringUtils;
 
 public class UsuarioRepository implements BaseRepository<Usuario> {
 
 	@Override
 	public Usuario inserir(Usuario novoUsuario) {
 
-		String query = "INSERT INTO tarefa.usuario (nome, cpf, email, data_nascimento, login, senha) VALUES (?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO tarefa.usuario (nome, cpf, email,perfil_acesso, data_nascimento,senha) VALUES (?, ?, ?, ?, ?, ?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 
 		try {
 
-			pstmt.setString(1, novoUsuario.getNome());
-			pstmt.setString(2, novoUsuario.getCpf());
-			pstmt.setString(3, novoUsuario.getEmail());
-			pstmt.setObject(4, novoUsuario.getDataNascimento());
-			pstmt.setString(5, novoUsuario.getLogin());
-			pstmt.setString(6, novoUsuario.getSenha());
+			this.preencherParametrosParaInsertiOuUpdate(pstmt, novoUsuario);
+			
 			pstmt.execute();
-
 			ResultSet resultado = pstmt.getGeneratedKeys();
+			
 			if (resultado.next()) {
 				novoUsuario.setIdUsuario(resultado.getInt(1));
 			}
@@ -45,6 +44,17 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		}
 
 		return novoUsuario;
+	}
+	
+	private void preencherParametrosParaInsertiOuUpdate(PreparedStatement pstmt, Usuario novoUsuario) throws SQLException {
+		pstmt.setString(1, novoUsuario.getNome());
+		pstmt.setString(2, novoUsuario.getCpf());
+		pstmt.setString(3, novoUsuario.getPerfil().toString());
+		pstmt.setString(4, novoUsuario.getEmail());
+		pstmt.setObject(5, novoUsuario.getDataNascimento());
+		pstmt.setString(7, StringUtils.cifrar(novoUsuario.getSenha()));
+		
+		
 	}
 
 	@Override
@@ -71,16 +81,11 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 	public boolean alterar(Usuario usuarioEditado) {
 		boolean alterou = false;
 		String query = " UPDATE tarefa.usuario " + " SET nome=?, email=?, data_nascimento=?, "
-				+ " login=?, senha=? " + " WHERE id_usuario=? ";
+				+ " senha=?, perfil_acesso=? " + " WHERE id_usuario=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
 		try {
-			stmt.setString(1, usuarioEditado.getNome());
-			stmt.setString(2, usuarioEditado.getCpf());
-			stmt.setString(3, usuarioEditado.getEmail() + "");
-			stmt.setDate(4, Date.valueOf(usuarioEditado.getDataNascimento()));
-			stmt.setString(5, usuarioEditado.getLogin());
-			stmt.setString(6, usuarioEditado.getSenha());
+			this.preencherParametrosParaInsertiOuUpdate(stmt, usuarioEditado);
 
 			stmt.setInt(7, usuarioEditado.getIdUsuario());
 			alterou = stmt.executeUpdate() > 0;
@@ -93,6 +98,29 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		}
 		return alterou;
 	}
+	
+	public boolean alterarIdSessao(Usuario novoUsuario) {
+		boolean alterou = false;
+		String query = " UPDATE tarefa.usuario "
+					 + " SET   id_sessao=? "
+				     + " WHERE id_usuario=?";
+		Connection conn = Banco.getConnection();
+		PreparedStatement pstmt = Banco.getPreparedStatement(conn, query);
+		try {
+			pstmt.setString(1, novoUsuario.getIdSessao());
+			pstmt.setInt(2, novoUsuario.getIdUsuario());
+			
+			alterou = pstmt.executeUpdate() > 0;
+		} catch (SQLException erro) {
+			System.out.println("Erro ao atualizar idSessao do Usuario");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeStatement(pstmt);
+			Banco.closeConnection(conn);
+		}
+		return alterou;
+	}
+
 
 	@Override
 	public Usuario consultarPorId(int id) {
@@ -106,13 +134,8 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		try {
 			resultado = stmt.executeQuery(query);
 			if (resultado.next()) {
-				usuario = new Usuario();
-				usuario.setIdUsuario(resultado.getInt("ID_USUARIO"));
-				usuario.setNome(resultado.getString("NOME"));
-				usuario.setCpf(resultado.getString("CPF"));
-				usuario.setDataNascimento(resultado.getDate("DATA_NASCIMENTO").toLocalDate());
-				usuario.setLogin(resultado.getString("LOGIN"));
-				usuario.setSenha(resultado.getString("SENHA"));
+				usuario = this.converterResultSetParaUsuario(resultado);
+				
 			}
 		} catch (SQLException erro) {
 			System.out.println("Erro ao consultar pessoa com o id: " + id);
@@ -122,6 +145,18 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 			Banco.closeStatement(stmt);
 			Banco.closeConnection(conn);
 		}
+		return usuario;
+	}
+	
+	private Usuario converterResultSetParaUsuario(ResultSet resultado) throws SQLException {
+		Usuario usuario = new Usuario();
+		usuario.setIdUsuario(resultado.getInt("ID_USUARIO"));
+		usuario.setNome(resultado.getString("NOME"));
+		usuario.setCpf(resultado.getString("CPF"));
+		usuario.setEmail(resultado.getString("EMAIL"));
+		usuario.setDataNascimento(resultado.getDate("DATA_NASCIMENTO").toLocalDate());
+		usuario.setPerfil(PerfilAcesso.valueOf(resultado.getString("PERFIL_ACESSO")));
+		usuario.setIdSessao(resultado.getString("ID_SESSAO"));
 		return usuario;
 	}
 
@@ -138,15 +173,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		try {
 			resultado = stmt.executeQuery(query);
 			while (resultado.next()) {
-				Usuario usuario = new Usuario();
-				usuario = new Usuario();
-				usuario.setIdUsuario(resultado.getInt("ID_USUARIO"));
-				usuario.setNome(resultado.getString("NOME"));
-				usuario.setCpf(resultado.getString("CPF"));
-				usuario.setDataNascimento(resultado.getDate("DATA_NASCIMENTO").toLocalDate());
-				usuario.setLogin(resultado.getString("LOGIN"));
-				usuario.setSenha(resultado.getString("SENHA"));
-
+				Usuario usuario = this.converterResultSetParaUsuario(resultado);
 				usuarios.add(usuario);
 			}
 		} catch (SQLException erro) {
@@ -181,4 +208,82 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 
 		return cpfJaUtilizado;
 	}
+	
+	public Usuario consultarPorLoginSenha(UsuarioDTO usuarioDTO) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ResultSet resultado = null;
+		Usuario usuario = null;
+		String query = " SELECT * FROM tarefa.usuario "
+				     + " WHERE email = '" + usuarioDTO.getLogin() + "'"
+				     + " AND senha = '" + StringUtils.cifrar(usuarioDTO.getSenha()) + "'";
+		try{
+			resultado = stmt.executeQuery(query);
+			if(resultado.next()){
+				usuario = this.converterResultSetParaUsuario(resultado);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar usuario com login (" + usuarioDTO.getLogin() + ")");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return usuario;
+	}
+	
+	public Usuario consultarPorLogin(String login) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ResultSet resultado = null;
+		Usuario usuario = new Usuario();
+		String query = " SELECT * FROM tarefa.usuario "
+				     + " WHERE email = '" + login + "'";
+		try{
+			resultado = stmt.executeQuery(query);
+			if(resultado.next()){
+				usuario = this.converterResultSetParaUsuario(resultado);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar usuario com login (" + login + ")");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return usuario;
+	}
+	
+	public Usuario consultarPorIdSessao(String idSessao) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		
+		ResultSet resultado = null;
+		Usuario usuario = new Usuario();
+		String query = " SELECT * FROM tarefa.usuario "
+				     + " WHERE id_sessao = '" + idSessao + "'";
+		try{
+			resultado = stmt.executeQuery(query);
+			if(resultado.next()){
+				usuario = this.converterResultSetParaUsuario(resultado);
+			}
+		} catch (SQLException erro){
+			System.out.println("Erro ao consultar usuario com idSessao (" + idSessao + ")");
+			System.out.println("Erro: " + erro.getMessage());
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return usuario;
+	}
+	
+	
+	
+	
+
 }

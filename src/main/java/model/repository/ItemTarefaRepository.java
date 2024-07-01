@@ -90,7 +90,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 
 	@Override
 	public ItemTarefa consultarPorId(int id) {
-		String query = "SELECT descricao, id_item FROM tarefa.item where id_item = " + id;
+		String query = "SELECT descricao, id_item, realizado FROM tarefa.item where id_item = " + id;
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ItemTarefa itemTarefa = null;
@@ -163,6 +163,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 				itemTarefa.setIdItem(resultado.getInt("id_item"));
 				itemTarefa.setDescricao(resultado.getString("descricao"));
 				itemTarefa.setRealizado(resultado.getBoolean("realizado"));
+				itemTarefa.setIdTarefa(resultado.getInt("id_tarefa"));
 				listaItemTarefa.add(itemTarefa);
 			}
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import exception.TarefaException;
-import model.DTO.TemplateTarefaDTO;
+import model.dto.TemplateTarefaDTO;
 import model.entity.ItemTarefa;
 import model.entity.Tarefa;
 import model.repository.ItemTarefaRepository;

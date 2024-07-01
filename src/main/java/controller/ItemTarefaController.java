@@ -15,7 +15,7 @@ import jakarta.ws.rs.core.MediaType;
 import model.entity.ItemTarefa;
 import service.ItemTarefaService;
 
-@Path("/item")
+@Path("/restrito/item")
 public class ItemTarefaController {
 
 	private ItemTarefaService service = new ItemTarefaService();

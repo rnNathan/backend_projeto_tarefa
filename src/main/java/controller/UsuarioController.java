@@ -17,7 +17,7 @@ import model.entity.Tarefa;
 import model.entity.Usuario;
 import service.UsuarioService;
 
-@Path("/usuario")
+@Path("/restrito/usuario")
 public class UsuarioController {
 
 	private UsuarioService usuarioService = new UsuarioService();

@@ -13,13 +13,13 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import model.DTO.TemplateTarefaDTO;
+import model.dto.TemplateTarefaDTO;
 import model.entity.ItemTarefa;
 import model.entity.Tarefa;
 import seletor.TarefaSeletor;
 import service.TarefaService;
 
-@Path("/tarefa")
+@Path("/restrito/tarefa")
 public class TarefaController {
 
 	private TarefaService tarefaService = new TarefaService();

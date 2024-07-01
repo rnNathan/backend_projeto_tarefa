@@ -2,7 +2,8 @@ package model.entity;
 
 import java.time.LocalDate;
 
-import enums.PerfilAcesso;
+import model.enums.PerfilAcesso;
+
 
 public class Usuario {
 

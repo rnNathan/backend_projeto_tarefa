@@ -8,9 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import enums.PerfilAcesso;
+
 import model.dto.UsuarioDTO;
 import model.entity.Usuario;
+import model.enums.PerfilAcesso;
 import util.StringUtils;
 
 public class UsuarioRepository implements BaseRepository<Usuario> {

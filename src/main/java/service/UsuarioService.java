@@ -3,10 +3,11 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 
-import enums.PerfilAcesso;
+
 import exception.TarefaException;
 import model.entity.Tarefa;
 import model.entity.Usuario;
+import model.enums.PerfilAcesso;
 import model.repository.TarefaRepository;
 import model.repository.UsuarioRepository;
 import seletor.TarefaSeletor;

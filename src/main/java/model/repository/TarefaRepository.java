@@ -19,7 +19,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 		try {
-			pstmt.setInt(1, novaTarefa.getUsuario().getIdUsuario());
+			pstmt.setInt(1, novaTarefa.getIdUsuario());
 			pstmt.setString(2, novaTarefa.getNomeTarefa());
 			pstmt.setString(3, novaTarefa.getTipoTarefa());
 			pstmt.execute();
@@ -108,10 +108,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 	private Tarefa converterResultSetParaTarefa(ResultSet resultado) throws SQLException{
 		Tarefa tarefa = new Tarefa();
 		tarefa.setIdTarefa(resultado.getInt("id_tarefa"));
-		
-		UsuarioRepository usuarioReposotory = new UsuarioRepository();
-		tarefa.setUsuario(usuarioReposotory.consultarPorId(resultado.getInt("id_usuario")));
-
+		tarefa.setIdUsuario(resultado.getInt("id_usuario"));
 		tarefa.setNomeTarefa(resultado.getString("nome_tarefa"));
 		tarefa.setTipoTarefa(resultado.getString("tipo_tarefa"));
 		tarefa.setRealizado(resultado.getBoolean("realizada"));

@@ -66,7 +66,7 @@ public class TarefaService {
 
 		// Cria nova tarefa
 		Tarefa novaTarefa = new Tarefa();
-		novaTarefa.setUsuario(tarefaTemplate.getUsuario());
+		novaTarefa.setIdUsuario(tarefaTemplate.getIdUsuario());
 		novaTarefa.setTipoTarefa(tarefaTemplate.getTipoTarefa());
 		novaTarefa.setNomeTarefa(templateDTO.getNomeNovaTarefa());
 		novaTarefa = tarefaRepository.inserir(novaTarefa);

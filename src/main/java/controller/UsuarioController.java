@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import exception.TarefaException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -21,6 +22,8 @@ import service.UsuarioService;
 public class UsuarioController {
 
 	private UsuarioService usuarioService = new UsuarioService();
+	
+	
 
 	@POST
 	@Path("/inserir")

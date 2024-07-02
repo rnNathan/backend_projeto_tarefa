@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import exception.TarefaException;
+import filter.AuthFilter;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -23,6 +25,8 @@ import service.TarefaService;
 public class TarefaController {
 
 	private TarefaService tarefaService = new TarefaService();
+	
+	private HttpServletRequest request;
 
 	@POST
 	@Path("/inserir")
@@ -59,6 +63,10 @@ public class TarefaController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Tarefa> consultarTodos() {
+		
+		String header = request.getHeader(AuthFilter.SESSION_ID_KEY);
+		System.err.println(header);
+		
 		return this.tarefaService.consultarTodos();
 	}
 

@@ -19,7 +19,7 @@ import service.LoginService;
 public class AuthFilter implements ContainerRequestFilter{
 
 	private static final String BASE_URL_RESTRITA = "restrito";
-	private static final String SESSION_ID_KEY = "sessionId";
+	public static final String SESSION_ID_KEY = "sessionId";
 	private static final String LOGIN_KEY = "login";
 
 	private LoginService loginService = new LoginService();

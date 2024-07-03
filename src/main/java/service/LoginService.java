@@ -37,8 +37,8 @@ public class LoginService {
 		return usuarioAutenticado;
 	}
 
-	public boolean chaveValida(String idSessao, String login) {
-		Usuario usuario = this.repository.consultarPorIdSessao(login);
+	public boolean chaveValida(String idSessao) {
+		Usuario usuario = this.repository.consultarPorIdSessao(idSessao);
 
 		return usuario != null 
 				&& usuario.getIdSessao() != null

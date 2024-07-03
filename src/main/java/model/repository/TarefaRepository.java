@@ -200,6 +200,7 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 		if (seletor.getIdUsuario() != null) {
 			query += " AND id_usuario =  " + seletor.getIdUsuario();
 		}
+		
 		if (seletor.getNomeTarefa() != null) {	
 			query += " AND upper(t.nome_tarefa) like upper ('%" + seletor.getNomeTarefa() + "%') ";
 		}

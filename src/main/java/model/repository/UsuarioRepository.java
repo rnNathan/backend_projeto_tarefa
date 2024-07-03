@@ -19,7 +19,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 	@Override
 	public Usuario inserir(Usuario novoUsuario) {
 
-		String query = "INSERT INTO tarefa.usuario (nome, cpf, email,perfil_acesso, data_nascimento,senha) VALUES (?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO tarefa.usuario (nome, cpf, email, perfil_acesso, data_nascimento,senha) VALUES (?, ?, ?, ?, ?, ?)";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 
@@ -50,10 +50,10 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 	private void preencherParametrosParaInsertiOuUpdate(PreparedStatement pstmt, Usuario novoUsuario) throws SQLException {
 		pstmt.setString(1, novoUsuario.getNome());
 		pstmt.setString(2, novoUsuario.getCpf());
-		pstmt.setString(3, novoUsuario.getPerfil().toString());
-		pstmt.setString(4, novoUsuario.getEmail());
+		pstmt.setString(3, novoUsuario.getEmail());
+		pstmt.setString(4, novoUsuario.getPerfil().toString());
 		pstmt.setObject(5, novoUsuario.getDataNascimento());
-		pstmt.setString(7, StringUtils.cifrar(novoUsuario.getSenha()));
+		pstmt.setString(6, StringUtils.cifrar(novoUsuario.getSenha()));
 		
 		
 	}

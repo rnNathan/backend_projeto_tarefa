@@ -19,34 +19,27 @@ import service.LoginService;
 public class AuthFilter implements ContainerRequestFilter{
 
 	private static final String BASE_URL_RESTRITA = "restrito";
-	public static final String SESSION_ID_KEY = "sessionId";
-	private static final String LOGIN_KEY = "login";
-
+	public static final String CHAVE_ID_SESSAO = "idSessao";
+	
 	private LoginService loginService = new LoginService();
-
-
+	
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		UriInfo url = requestContext.getUriInfo();
 		if(url.getPath().contains(BASE_URL_RESTRITA)) {
-			List<String> keysSessionId = requestContext.getHeaders().get(SESSION_ID_KEY);
-			List<String> keysLogin = requestContext.getHeaders().get(LOGIN_KEY);
-			if(keysSessionId != null && keysSessionId.size() == 1 
-					&& keysLogin != null && keysLogin.size() == 1) {
+			List<String> keysSessionId = requestContext.getHeaders().get(CHAVE_ID_SESSAO);
+			
+			if(keysSessionId != null && keysSessionId.size() == 1) {
 				String sessionId = keysSessionId.get(0);
-				String login = keysLogin.get(0);
-				validarApiKey(sessionId, login, requestContext);
+				validarApiKey(sessionId, requestContext);
 			}else {
-//				ResponseBuilder responseBuilder = Response.serverError();
-//				Response response = responseBuilder.status(Status.UNAUTHORIZED).build();
-//				requestContext.abortWith(response);
 				montarResponseUnauthorized(requestContext);
 			}
 		}
 	}
 
-	private void validarApiKey(String idSessao, String login, ContainerRequestContext requestContext) {
-		if(!loginService.chaveValida(idSessao, login)) {
+	private void validarApiKey(String idSessao, ContainerRequestContext requestContext) {
+		if(!loginService.chaveValida(idSessao)) {
 			montarResponseUnauthorized(requestContext);
 		}
 	}
@@ -59,7 +52,7 @@ public class AuthFilter implements ContainerRequestFilter{
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 				.entity(json)
 				.build();
-
+		
 		requestContext.abortWith(response);
 	}
 }

@@ -14,18 +14,24 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import model.dto.TemplateTarefaDTO;
 import model.entity.ItemTarefa;
 import model.entity.Tarefa;
+import model.entity.Usuario;
+import model.enums.PerfilAcesso;
 import seletor.TarefaSeletor;
 import service.TarefaService;
+import service.UsuarioService;
 
 @Path("/restrito/tarefa")
 public class TarefaController {
 
 	private TarefaService tarefaService = new TarefaService();
+	private UsuarioService usuarioService = new UsuarioService();
 	
+	@Context
 	private HttpServletRequest request;
 
 	@POST
@@ -62,19 +68,32 @@ public class TarefaController {
 	@Path("/listar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<Tarefa> consultarTodos() {
-		
-		String header = request.getHeader(AuthFilter.SESSION_ID_KEY);
-		System.err.println(header);
-		
+	public ArrayList<Tarefa> consultarTodos() {		
 		return this.tarefaService.consultarTodos();
 	}
-
+	
+	/**
+	 * Caso o filtro seja por idUsuario é verificar se é do proprio usuário e ou do admin.
+	 * @param seletor
+	 * @return
+	 * @throws TarefaException
+	 */
+	
 	@Path("/filtro")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<Tarefa> consultarPorFiltro(TarefaSeletor seletor) {
+	public ArrayList<Tarefa> consultarPorFiltro(TarefaSeletor seletor) throws TarefaException {
+		
+		String idSessao = request.getHeader(AuthFilter.CHAVE_ID_SESSAO);
+		Usuario usuario = usuarioService.consultarPorIdSessao(idSessao);
+		
+		if (seletor.getIdUsuario() != null) {
+			if (usuario.getPerfil() == PerfilAcesso.USUARIO && usuario.getIdUsuario() != seletor.getIdUsuario()) {
+				throw new TarefaException("Usuário sem acesso.");
+			}
+		}
+		
 		return tarefaService.consultarPorFiltro(seletor);
 	}
 

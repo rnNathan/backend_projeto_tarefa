@@ -33,6 +33,7 @@ public class UsuarioService {
 			umUsuario.setPerfil(PerfilAcesso.USUARIO);
 		}
 	}
+	
 
 	public boolean alterar(Usuario usuarioEditado) throws TarefaException {
 		validarPerfilUsuario(usuarioEditado);
@@ -63,6 +64,10 @@ public class UsuarioService {
 
 	public List<Usuario> consultarTodas() {
 		return repository.consultarTodos();
+	}
+	
+	public Usuario consultarPorIdSessao(String idSessao) {
+		return this.repository.consultarPorIdSessao(idSessao);
 	}
 
 	private void validarCpf(Usuario novoUsuario) throws TarefaException {
@@ -106,4 +111,6 @@ public class UsuarioService {
 			throw new TarefaException("O CPF não pode ser alterado.");
 		}
 	}
+	
+	
 }

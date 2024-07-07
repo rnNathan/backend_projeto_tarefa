@@ -72,7 +72,7 @@ public class ItemTarefaRepository implements BaseRepository<ItemTarefa> {
 
 		try {
 			pstmt.setString(1, alterar.getDescricao());
-			pstmt.setBoolean(2, alterar.isRealizado());
+			pstmt.setBoolean(2, alterar.getRealizado());
 			
 			pstmt.setInt(3, alterar.getIdItem());
 			alterou = pstmt.executeUpdate() > 0;

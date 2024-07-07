@@ -1,7 +1,6 @@
 package model.repository;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +24,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 
 		try {
 
-			this.preencherParametrosParaInsertiOuUpdate(pstmt, novoUsuario);
+			this.preencherInsert(novoUsuario, pstmt);
 			
 			pstmt.execute();
 			ResultSet resultado = pstmt.getGeneratedKeys();
@@ -47,15 +46,20 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		return novoUsuario;
 	}
 	
-	private void preencherParametrosParaInsertiOuUpdate(PreparedStatement pstmt, Usuario novoUsuario) throws SQLException {
-		pstmt.setString(1, novoUsuario.getNome());
-		pstmt.setString(2, novoUsuario.getCpf());
-		pstmt.setString(3, novoUsuario.getEmail());
-		pstmt.setString(4, novoUsuario.getPerfil().toString());
-		pstmt.setObject(5, novoUsuario.getDataNascimento());
-		pstmt.setString(6, StringUtils.cifrar(novoUsuario.getSenha()));
-		
-		
+	public void preencherInsert(Usuario usuario, PreparedStatement pstmt) throws SQLException{
+		pstmt.setString(1, usuario.getNome());
+		pstmt.setString(2, usuario.getCpf());
+		pstmt.setString(3, usuario.getEmail());
+		pstmt.setString(4, usuario.getPerfil().toString());
+		pstmt.setObject(5, usuario.getDataNascimento());
+		pstmt.setString(6, StringUtils.cifrar(usuario.getSenha()));
+	}
+	
+	public void preencherUpdate(Usuario usuario, PreparedStatement pstmt) throws SQLException{
+		pstmt.setString(1, usuario.getNome());
+		pstmt.setString(2, usuario.getEmail());
+		pstmt.setObject(3, usuario.getDataNascimento());
+
 	}
 
 	@Override
@@ -81,20 +85,19 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 	@Override
 	public boolean alterar(Usuario usuarioEditado) {
 		boolean alterou = false;
-		String query = " UPDATE tarefa.usuario " + " SET nome=?, email=?, data_nascimento=?, "
-				+ " senha=?, perfil_acesso=? " + " WHERE id_usuario=? ";
+		String query = " UPDATE tarefa.usuario " + " SET nome=?, email=?, data_nascimento=? " + " WHERE id_usuario=? ";
 		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatementWithPk(conn, query);
+		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 		try {
-			this.preencherParametrosParaInsertiOuUpdate(stmt, usuarioEditado);
+			this.preencherUpdate(usuarioEditado, pstmt);
 
-			stmt.setInt(7, usuarioEditado.getIdUsuario());
-			alterou = stmt.executeUpdate() > 0;
+			pstmt.setInt(4, usuarioEditado.getIdUsuario());
+			alterou = pstmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar pessoa");
 			System.out.println("Erro: " + erro.getMessage());
 		} finally {
-			Banco.closeStatement(stmt);
+			Banco.closeStatement(pstmt);
 			Banco.closeConnection(conn);
 		}
 		return alterou;

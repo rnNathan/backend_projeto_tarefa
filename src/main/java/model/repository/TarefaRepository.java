@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.entity.ItemTarefa;
 import model.entity.Tarefa;
 import seletor.TarefaSeletor;
 
@@ -60,8 +61,11 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 	@Override
 	public boolean alterar(Tarefa tarefaSelecionada) {
 		String query = "UPDATE tarefa.tarefas " + " SET nome_tarefa=?, tipo_tarefa=?, realizada=?, isTemplate=? where id_tarefa=? ";
+		String queryItem = "UPDATE tarefa.item SET realizado=? WHERE id_item=?";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
+		PreparedStatement pstmtItem = Banco.getPreparedStatementWithPk(conn, queryItem);
+		
 		boolean alterou = false;
 		try {
 			pstmt.setString(1, tarefaSelecionada.getNomeTarefa());
@@ -70,6 +74,26 @@ public class TarefaRepository implements BaseRepository<Tarefa> {
 			pstmt.setBoolean(4, tarefaSelecionada.getIsTemplate());
 			pstmt.setInt(5, tarefaSelecionada.getIdTarefa());
 			alterou = pstmt.executeUpdate() > 0;
+			
+		    if (tarefaSelecionada.getRealizado() == false) {
+	            for (ItemTarefa item : tarefaSelecionada.getItensTarefa()) {
+	                item.setRealizado(false);
+	                // Atualize cada item no banco de dados
+	                pstmtItem.setBoolean(1, item.getRealizado());
+	                pstmtItem.setInt(2, item.getIdItem());
+	                pstmtItem.executeUpdate();
+	            }
+	        }
+		    
+		    if (tarefaSelecionada.getRealizado() == true) {
+	            for (ItemTarefa item : tarefaSelecionada.getItensTarefa()) {
+	                item.setRealizado(true);
+	                // Atualize cada item no banco de dados
+	                pstmtItem.setBoolean(1, item.getRealizado());
+	                pstmtItem.setInt(2, item.getIdItem());
+	                pstmtItem.executeUpdate();
+	            }
+	        }
 		} catch (Exception e) {
 			System.out.println("Erro ao atualizar tarefa");
 			System.out.println("Erro: " + e.getMessage());

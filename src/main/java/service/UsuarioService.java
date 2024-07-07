@@ -37,10 +37,7 @@ public class UsuarioService {
 
 	public boolean alterar(Usuario usuarioEditado) throws TarefaException {
 		validarPerfilUsuario(usuarioEditado);
-		validarCamposObrigatorios(usuarioEditado);
-		validarCamposPermitidos(usuarioEditado);
 		
-
 		return repository.alterar(usuarioEditado);
 	}
 

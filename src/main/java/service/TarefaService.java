@@ -1,6 +1,7 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import exception.TarefaException;
@@ -30,10 +31,22 @@ public class TarefaService {
 	}
 
 	public boolean alterar(Tarefa alterarTarefa) {
+		for (ItemTarefa list : itemRepository.consultarItensPendentes(alterarTarefa.getIdTarefa())) {
+			if (list.getRealizado() == false) {
+				list.setRealizado(true);
+			}
+			
+		}
+		
+		
 		return tarefaRepository.alterar(alterarTarefa);
 	}
 
 	public boolean excluir(int id) throws TarefaException {
+		for (ItemTarefa item : this.itemRepository.consultarTodosOsItensAssociadoUmaTarefa(id)) {
+			itemRepository.excluir(item.getIdItem());
+		}
+		
 		return tarefaRepository.excluir(id);
 
 	}

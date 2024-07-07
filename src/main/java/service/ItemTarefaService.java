@@ -31,6 +31,11 @@ public class ItemTarefaService {
 			return itemRepository.excluir(id);
 		
 	}
+	
+	public ArrayList<ItemTarefa>consultarTodosOsItensAssociadoUmaTarefa(int id){
+		return itemRepository.consultarTodosOsItensAssociadoUmaTarefa(id);
+		
+	}
 
 	private void validarCamposObrigatorios(ItemTarefa i) throws TarefaException {
 
@@ -45,8 +50,4 @@ public class ItemTarefaService {
 		}
 	}
 	
-	public ArrayList<ItemTarefa>consultarTodosOsItensAssociadoUmaTarefa(int id){
-		return itemRepository.consultarTodosOsItensAssociadoUmaTarefa(id);
-		
-	}
 }

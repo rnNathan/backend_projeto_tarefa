@@ -5,9 +5,9 @@ public class ItemTarefa {
 	private int idItem;
 	private Integer idTarefa;
 	private String descricao;
-	private boolean realizado;
+	private Boolean realizado;
 
-	public ItemTarefa(int idItem, Integer idTarefa, String descricao, boolean realizado) {
+	public ItemTarefa(int idItem, Integer idTarefa, String descricao, Boolean realizado) {
 		super();
 		this.idItem = idItem;
 		this.idTarefa = idTarefa;
@@ -43,12 +43,14 @@ public class ItemTarefa {
 		this.descricao = descricao;
 	}
 
-	public boolean isRealizado() {
+	public Boolean getRealizado() {
 		return realizado;
 	}
 
-	public void setRealizado(boolean realizado) {
+	public void setRealizado(Boolean realizado) {
 		this.realizado = realizado;
 	}
+
+
 
 }

@@ -59,6 +59,7 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 		pstmt.setString(1, usuario.getNome());
 		pstmt.setString(2, usuario.getEmail());
 		pstmt.setObject(3, usuario.getDataNascimento());
+		pstmt.setString(4, usuario.getPerfil().toString());
 
 	}
 
@@ -85,13 +86,13 @@ public class UsuarioRepository implements BaseRepository<Usuario> {
 	@Override
 	public boolean alterar(Usuario usuarioEditado) {
 		boolean alterou = false;
-		String query = " UPDATE tarefa.usuario " + " SET nome=?, email=?, data_nascimento=? " + " WHERE id_usuario=? ";
+		String query = " UPDATE tarefa.usuario " + " SET nome=?, email=?, data_nascimento=?, perfil_acesso=?" + " WHERE id_usuario=? ";
 		Connection conn = Banco.getConnection();
 		PreparedStatement pstmt = Banco.getPreparedStatementWithPk(conn, query);
 		try {
 			this.preencherUpdate(usuarioEditado, pstmt);
 
-			pstmt.setInt(4, usuarioEditado.getIdUsuario());
+			pstmt.setInt(5, usuarioEditado.getIdUsuario());
 			alterou = pstmt.executeUpdate() > 0;
 		} catch (SQLException erro) {
 			System.out.println("Erro ao atualizar pessoa");

@@ -8,8 +8,9 @@ create table if not exists tarefa.usuario (
     cpf varchar(11) not null,
     email varchar(50) not null,
     data_nascimento DATE NOT NULL,
-	login varchar(20) not null,
-    senha varchar(12) not null
+    perfil_acesso varchar(255) not null,
+    id_sessao varchar(255),
+    senha varchar(255) not null
 );
 
 create table if not exists tarefa.tarefas (
